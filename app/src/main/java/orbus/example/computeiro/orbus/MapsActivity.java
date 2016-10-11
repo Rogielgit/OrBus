@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 
+//man
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
