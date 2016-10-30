@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "605167782957",
+    "firebase_url": "https://orbus-9b119.firebaseio.com",
+    "project_id": "orbus-9b119",
+    "storage_bucket": "orbus-9b119.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:605167782957:android:fa9f619611b9009b",
+        "android_client_info": {
+          "package_name": "orbus.example.computeiro.orbus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "605167782957-mifqbp96ani4ijnlq7cusf7320uftm4m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAatPLhiHW_wYef9Afy3VBdy6052oKZmdQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
