@@ -1,6 +1,7 @@
 package orbus.example.computeiro.orbus;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -185,16 +186,23 @@ public class LoginActivity extends BaseActivity implements
         return valid;
     }
 
-    private void updateUI(FirebaseUser user) {
+    private void updateUI(FirebaseUser user)
+    {
         hideProgressDialog();
         if (user != null) {
-            mStatusTextView.setText(getString(R.string.emailpassword_status_fmt, user.getEmail()));
-            mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-
-            findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
+           // mStatusTextView.setText(getString(R.string.emailpassword_status_fmt, user.getEmail()));
+            //mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
+            showProgressDialog();
+            /*findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
             findViewById(R.id.email_password_fields).setVisibility(View.GONE);
-            findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
-        } else {
+            findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);*/
+
+            Intent it = new Intent(LoginActivity.this, MapsActivity.class);
+            startActivity(it);
+        }
+        else {
+
+
             mStatusTextView.setText(R.string.signed_out);
             mDetailTextView.setText(null);
 
