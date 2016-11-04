@@ -20,8 +20,9 @@
             android:text="Pesquisar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button2" />
-
+            android:theme="@style/ThemeOverlay.MyDarkButton"
+            android:id="@+id/button2"
+            android:onClick="encerarLogin"/>
         <EditText
             android:layout_width="106dp"
             android:layout_height="wrap_content"
@@ -30,12 +31,17 @@
             android:ems="10"
             android:id="@+id/editText" />
 
+
     </LinearLayout>
 
     <LinearLayout
 
+
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+
+
 
         <fragment
             android:id="@+id/map"

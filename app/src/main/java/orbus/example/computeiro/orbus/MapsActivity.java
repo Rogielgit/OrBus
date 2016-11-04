@@ -1,7 +1,7 @@
 package orbus.example.computeiro.orbus;
 
-
 import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -10,14 +10,18 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -48,16 +52,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-
-
-
-
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-22.007373, -47.894752);
         mMap.addMarker(new MarkerOptions().position(sydney).title("USP"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,15));
-
-
     }
+
+    public void encerarLogin()
+    {
+
+
+        //   LoginActivity teste = new LoginActivity();
+      //  teste.signOut();
+    }
+
 }

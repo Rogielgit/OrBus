@@ -161,7 +161,15 @@ public class LoginActivity extends BaseActivity implements
 
     private void signOut() {
         mAuth.signOut();
-        updateUI(null);
+        //updateUI(null);
+    }
+    public FirebaseAuth getAuth()
+    {
+        return mAuth;
+    }
+    public void setmAuth(FirebaseAuth mAuth)
+    {
+        this.mAuth = mAuth;
     }
 
     private boolean validateForm() {
