@@ -59,6 +59,7 @@ public class RouteActivity extends AppCompatActivity
 	private Button bInicio;
 	private Button bFim;
 	private Button bPonto;
+	private Button bSalvar;
 	private Button bCarregar;
 	private int ponto = 1;
 	private ArrayList<LatLng> pontos;
@@ -76,6 +77,7 @@ public class RouteActivity extends AppCompatActivity
 		bInicio = (Button) findViewById(R.id.bIniciar);
 		bFim = (Button) findViewById(R.id.bFinalizar);
 		bPonto = (Button) findViewById(R.id.bPonto);
+		bSalvar = (Button) findViewById(R.id.bSalvar);
 		bCarregar = (Button) findViewById(R.id.bCarregar);
 
 		bInicio.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +85,7 @@ public class RouteActivity extends AppCompatActivity
 				started = true;
 				pontos.clear();
 				marcas.clear();
+				mMap.clear();
 
 				pontos.add(prevLatLng);
 
@@ -99,6 +102,7 @@ public class RouteActivity extends AppCompatActivity
 				bInicio.setEnabled(false);
 				bPonto.setEnabled(true);
 				bFim.setEnabled(true);
+				bSalvar.setEnabled(false);
 				bCarregar.setEnabled(false);
 			}
 		});
@@ -130,6 +134,7 @@ public class RouteActivity extends AppCompatActivity
 				bInicio.setEnabled(true);
 				bPonto.setEnabled(false);
 				bFim.setEnabled(false);
+				bSalvar.setEnabled(true);
 				bCarregar.setEnabled(true);
 			}
 		});
@@ -144,6 +149,22 @@ public class RouteActivity extends AppCompatActivity
 
 				marcas.add(marker);
 				ponto++;
+			}
+		});
+
+		bSalvar.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View arg0) {
+				String ext = ".orbm";
+				String fragTag = "Salvar...";
+
+				FileSaveFragment fsf = FileSaveFragment.newInstance(ext,
+					R.string.salvarOk,
+					R.string.salvarCancelar,
+					R.string.salvarTitulo,
+					R.string.salvarEditar,
+					R.drawable.salvar);
+
+				fsf.show(getFragmentManager(), fragTag);
 			}
 		});
 
@@ -273,10 +294,8 @@ public class RouteActivity extends AppCompatActivity
 		catch (IOException e) {
 			e.printStackTrace();
 			showToast("Erro de gravação.", Toast.LENGTH_SHORT);
-			mMap.clear();
 			return false;
 		}
-		mMap.clear();
 		return true;
 	}
 
@@ -345,6 +364,7 @@ public class RouteActivity extends AppCompatActivity
 			inputFile.close();
 
 			exibeRota();
+			bSalvar.setEnabled(true);
 		}
 		catch(Exception e) {
 			if (inputFile != null)

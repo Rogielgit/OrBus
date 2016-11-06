@@ -45,6 +45,13 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/bCarregar"/>
+
+		<Button
+			android:text="Salvar Rota"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/bSalvar"
+			android:enabled="false"/>
 	</LinearLayout>
 
 	<LinearLayout
