@@ -30,7 +30,12 @@
             android:text=" "
             android:ems="10"
             android:id="@+id/editText" />
-
+        <Button
+          android:text="Rota"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:id="@+id/bRota"
+          android:layout_weight="1"/>
 
     </LinearLayout>
 
@@ -47,7 +52,7 @@
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="1161dp"
+            android:layout_height="match_parent"
             tools:context="orbus.example.computeiro.orbus.MapsActivity"
             map:uiZoomControls="false"
             map:uiZoomGestures="true"

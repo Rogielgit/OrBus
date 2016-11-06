@@ -1,5 +1,6 @@
 package orbus.example.computeiro.orbus;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -11,6 +12,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,6 +40,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        Button bRoute = (Button) findViewById(R.id.bRota);
+				bRoute.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+
+                // Start NewActivity.class
+                Intent myIntent = new Intent(MapsActivity.this,
+                  RouteActivity.class);
+                startActivity(myIntent);
+            }
+        });
     }
 
 

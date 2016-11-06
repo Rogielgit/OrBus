@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+							xmlns:map="http://schemas.android.com/apk/res-auto"
+							xmlns:tools="http://schemas.android.com/tools"
+							android:orientation="vertical"
+							android:layout_width="match_parent"
+							android:layout_height="match_parent">
+
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:weightSum="1">
+
+
+		<Button
+			android:text="Inicio"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/bIniciar"
+			android:enabled="false"/>
+		<Button
+			android:text="Fim"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/bFinalizar"
+			android:enabled="false"/>
+
+		<Button
+			android:text="Ponto"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/bPonto"
+			android:enabled="false"/>
+
+	</LinearLayout>
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:weightSum="1">
+
+		<Button
+			android:text="Carregar Rota"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/bCarregar"/>
+	</LinearLayout>
+
+	<LinearLayout
+
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<fragment
+			android:id="@+id/map"
+			android:name="com.google.android.gms.maps.SupportMapFragment"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			tools:context="orbus.orbus.com.orbus.RouteActivity"
+			map:uiZoomControls="false"
+			map:uiZoomGestures="true"
+			map:cameraZoom="5"
+			/>
+
+	</LinearLayout>
+</LinearLayout>

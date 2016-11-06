@@ -15,6 +15,14 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="salvarOk">Salvar</string>
+    <string name="salvarCancelar">Cancelar</string>
+    <string name="salvarTitulo">Salvar</string>
+    <string name="salvarEditar">Nome do arquivo</string>
+    <string name="abrirOk">Abrir</string>
+    <string name="abrirCancelar">Cancelar</string>
+    <string name="abrirTitulo">Abrir</string>
+    <string name="abrirEditar">Nome do arquivo</string>
 
 
 
