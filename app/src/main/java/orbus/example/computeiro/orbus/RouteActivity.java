@@ -143,7 +143,7 @@ public class RouteActivity extends AppCompatActivity
 			public void onClick(View arg0) {
 				Marker marker = mMap.addMarker(new MarkerOptions()
 					.position(prevLatLng)
-					.title("Ponto "+ponto)
+					.title("Ponto " + ponto)
 					.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
 				marker.setTag("ponto");
 
