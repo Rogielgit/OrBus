@@ -52,6 +52,27 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/bSalvar"
 			android:enabled="false"/>
+
+		<Button
+			android:text="Salvar firebase"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/bSalvarFirebase"
+			android:enabled="false"/>
+	</LinearLayout>
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:weightSum="1">
+
+		<EditText
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:inputType="textPersonName"
+			android:hint="Nome da Rota"
+			android:ems="10"
+			android:id="@+id/routeName"
+			android:layout_weight="1"/>
 	</LinearLayout>
 
 	<LinearLayout

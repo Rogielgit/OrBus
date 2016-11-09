@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.plus.model.people.Person;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.ui.IconGenerator;
 
 import java.io.File;
@@ -40,10 +47,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+import static android.R.attr.name;
+import static android.R.id.edit;
+import static orbus.example.computeiro.orbus.R.id.bSalvarFirebase;
 import static orbus.example.computeiro.orbus.R.id.map;
+import static orbus.example.computeiro.orbus.R.id.routeName;
 
 public class RouteActivity extends AppCompatActivity
 	implements OnMapReadyCallback, LocationListener,
@@ -58,25 +72,32 @@ public class RouteActivity extends AppCompatActivity
 	private Button bPonto;
 	private Button bSalvar;
 	private Button bCarregar;
+	private Button bSalvarFirebase;
 	private int ponto = 1;
 	private ArrayList<LatLng> pontos;
 	private ArrayList<Marker> marcas;
 	private Marker you = null;
+	private EditText nomeDaRota;
+	private DatabaseReference mDatabase;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_route);
 
+		mDatabase = FirebaseDatabase.getInstance().getReference();
+
 		pontos = new ArrayList<LatLng>();
 		marcas = new ArrayList<Marker>();
 
+		nomeDaRota = (EditText) findViewById(routeName);
 
 		bInicio = (Button) findViewById(R.id.bIniciar);
 		bFim = (Button) findViewById(R.id.bFinalizar);
 		bPonto = (Button) findViewById(R.id.bPonto);
 		bSalvar = (Button) findViewById(R.id.bSalvar);
 		bCarregar = (Button) findViewById(R.id.bCarregar);
+		bSalvarFirebase = (Button) findViewById(R.id.bSalvarFirebase);
 
 		bInicio.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
@@ -101,6 +122,7 @@ public class RouteActivity extends AppCompatActivity
 				bPonto.setEnabled(true);
 				bFim.setEnabled(true);
 				bSalvar.setEnabled(false);
+				bSalvarFirebase.setEnabled(false);
 				bCarregar.setEnabled(false);
 			}
 		});
@@ -133,6 +155,7 @@ public class RouteActivity extends AppCompatActivity
 				bPonto.setEnabled(false);
 				bFim.setEnabled(false);
 				bSalvar.setEnabled(true);
+				bSalvarFirebase.setEnabled(true);
 				bCarregar.setEnabled(true);
 			}
 		});
@@ -184,6 +207,12 @@ public class RouteActivity extends AppCompatActivity
 			}
 		});
 
+		bSalvarFirebase.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View arg0) {
+				salvarFirebase();
+			}
+		});
+
 		// Obtain the SupportMapFragment and get notified when the map is ready to be used.
 		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
 			.findFragmentById(map);
@@ -203,6 +232,36 @@ public class RouteActivity extends AppCompatActivity
 		} catch (SecurityException e) {
 			Log.e("RouteActivity", "Permission Error");
 		}
+	}
+
+	private void salvarFirebase() {
+		if (nomeDaRota.getText().toString().equals("")) {
+			showToast("Digite o nome da rota!", Toast.LENGTH_SHORT);
+			return;
+		}
+		String auxNewLine = new String("\n");
+
+		String value = "";
+		value += "<p>" + auxNewLine;
+		for (int i = 0; i < pontos.size(); i++) {
+			LatLng ponto = pontos.get(i);
+			value += ponto.latitude + ";" + ponto.longitude + auxNewLine;
+		}
+		value += "</p>" + auxNewLine;
+		value += "<m>" + auxNewLine;
+		for (int i = 0; i < marcas.size(); i++) {
+			Marker marca = marcas.get(i);
+			String tipo = (String) marca.getTag();
+			String titulo = marca.getTitle();
+			String position = marca.getPosition().latitude + ";" + marca.getPosition().longitude;
+			value += tipo + ";" + titulo + ";" + position + auxNewLine;
+		}
+		value += "</m>" + auxNewLine;
+
+		Route r = new Route(nomeDaRota.getText().toString(),value);
+
+		mDatabase.child("routes").child(r.getName()).setValue(r);
+		showToast("Rota inserida!", Toast.LENGTH_SHORT);
 	}
 
 	@Override
@@ -363,6 +422,7 @@ public class RouteActivity extends AppCompatActivity
 
 			exibeRota();
 			bSalvar.setEnabled(true);
+			bSalvarFirebase.setEnabled(true);
 		} catch (Exception e) {
 			if (inputFile != null)
 				inputFile.close();

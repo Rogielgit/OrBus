@@ -64,12 +64,4 @@
 
 	<string name="id_fmt">User ID: %s</string>
 	<string name="email_fmt">Email: %s</string>
-
-	<string-array name="DELETE">
-		<item>Selecionar...</item>
-		<item>Array Item One</item>
-		<item>Array Item Two</item>
-		<item>Array Item Three</item>
-	</string-array>
-
 </resources>
