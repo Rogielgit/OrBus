@@ -205,7 +205,7 @@ public class LoginActivity extends BaseActivity implements
             findViewById(R.id.email_password_fields).setVisibility(View.GONE);
             findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);*/
 
-            Intent it = new Intent(LoginActivity.this, MapsActivity.class);
+            Intent it = new Intent(LoginActivity.this, PesquisarActivity.class);
             startActivity(it);
         }
         else {

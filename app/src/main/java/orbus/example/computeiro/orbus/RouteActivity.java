@@ -2,18 +2,20 @@ package orbus.example.computeiro.orbus;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Handler;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -21,11 +23,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,6 +33,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.ui.IconGenerator;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,15 +43,14 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-import static android.os.Build.VERSION_CODES.M;
 import static orbus.example.computeiro.orbus.R.id.map;
 
 public class RouteActivity extends AppCompatActivity
 	implements OnMapReadyCallback, LocationListener,
-	FileSaveFragment.Callbacks,	FileSelectFragment.Callbacks{
+	FileSaveFragment.Callbacks, FileSelectFragment.Callbacks {
 	private GoogleMap mMap;
 	private LocationManager locationManager;
-	private LatLng prevLatLng = new LatLng(0,0);
+	private LatLng prevLatLng = new LatLng(0, 0);
 	private boolean started = false;
 	private boolean StartAllowed = false;
 	private Button bInicio;
@@ -64,6 +61,7 @@ public class RouteActivity extends AppCompatActivity
 	private int ponto = 1;
 	private ArrayList<LatLng> pontos;
 	private ArrayList<Marker> marcas;
+	private Marker you = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -176,7 +174,7 @@ public class RouteActivity extends AppCompatActivity
 					R.string.abrirOk,
 					R.string.abrirCancelar,
 					R.string.abrirTitulo,
-					R.drawable.abrir,R.drawable.pasta,R.drawable.arquivo);
+					R.drawable.abrir, R.drawable.pasta, R.drawable.arquivo);
 
 				ArrayList<String> allowedExtensions = new ArrayList<String>();
 				allowedExtensions.add(".orbm");
@@ -199,8 +197,9 @@ public class RouteActivity extends AppCompatActivity
 		String bestProvider = locationManager.getBestProvider(criteria, true);
 
 		try {
+			locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
 			locationManager.requestLocationUpdates(
-				LocationManager.GPS_PROVIDER,2000, 1, this);
+				LocationManager.GPS_PROVIDER, 2000, 1, this);
 		} catch (SecurityException e) {
 			Log.e("RouteActivity", "Permission Error");
 		}
@@ -211,7 +210,7 @@ public class RouteActivity extends AppCompatActivity
 		boolean canSave = true;
 
 		// Catch the really stupid case.
-		if (absolutePath == null || absolutePath.length() ==0 ||
+		if (absolutePath == null || absolutePath.length() == 0 ||
 			fileName == null || fileName.length() == 0) {
 			canSave = false;
 			showToast("Digite o nome do arquivo", Toast.LENGTH_SHORT);
@@ -220,7 +219,7 @@ public class RouteActivity extends AppCompatActivity
 		// Do we have a filename if the extension is thrown away?
 		if (canSave) {
 			String copyName = FileSaveFragment.NameNoExtension(fileName);
-			if (copyName == null || copyName.length() == 0 ) {
+			if (copyName == null || copyName.length() == 0) {
 				canSave = false;
 				showToast("Digite o nome do arquivo", Toast.LENGTH_SHORT);
 			}
@@ -240,14 +239,14 @@ public class RouteActivity extends AppCompatActivity
 
 	@Override
 	public void onConfirmSave(String absolutePath, String filename) {
-		if (absolutePath==null || filename==null)
+		if (absolutePath == null || filename == null)
 			return;
 
-		salvar(absolutePath,filename);
+		salvar(absolutePath, filename);
 	}
 
 	public boolean salvar(String path, String filename) {
-		if (pontos.size()<2) {
+		if (pontos.size() < 2) {
 			showToast("Rota sem pontos.", Toast.LENGTH_SHORT);
 			mMap.clear();
 			return false;
@@ -255,43 +254,42 @@ public class RouteActivity extends AppCompatActivity
 
 		File outputfile = null;
 		if (filename.endsWith(".orbm"))
-			outputfile = new File(path+"/"+filename);
+			outputfile = new File(path + "/" + filename);
 		else
-			outputfile = new File(path+"/"+filename+".orbm");
+			outputfile = new File(path + "/" + filename + ".orbm");
 
 		FileOutputStream fos;
 
 		String auxNewLine = new String("\n");
 		try {
-			if ( !outputfile.exists() ){
+			if (!outputfile.exists()) {
 				outputfile.createNewFile();
 			}
 
 			fos = new FileOutputStream(outputfile, false);
-			OutputStreamWriter writer = new OutputStreamWriter(fos,"latin1");
+			OutputStreamWriter writer = new OutputStreamWriter(fos, "latin1");
 
-			writer.write("<p>"+auxNewLine);
-			for (int i=0;i<pontos.size();i++) {
+			writer.write("<p>" + auxNewLine);
+			for (int i = 0; i < pontos.size(); i++) {
 				LatLng ponto = pontos.get(i);
-				writer.write(ponto.latitude+";"+ponto.longitude+auxNewLine);
+				writer.write(ponto.latitude + ";" + ponto.longitude + auxNewLine);
 			}
-			writer.write("</p>"+auxNewLine);
-			writer.write("<m>"+auxNewLine);
-			for (int i=0;i<marcas.size();i++) {
+			writer.write("</p>" + auxNewLine);
+			writer.write("<m>" + auxNewLine);
+			for (int i = 0; i < marcas.size(); i++) {
 				Marker marca = marcas.get(i);
-				String tipo = (String)marca.getTag();
+				String tipo = (String) marca.getTag();
 				String titulo = marca.getTitle();
-				String position = marca.getPosition().latitude+";"+marca.getPosition().longitude;
-				writer.write(tipo+";"+titulo+";"+position+auxNewLine);
+				String position = marca.getPosition().latitude + ";" + marca.getPosition().longitude;
+				writer.write(tipo + ";" + titulo + ";" + position + auxNewLine);
 			}
-			writer.write("</m>"+auxNewLine);
+			writer.write("</m>" + auxNewLine);
 
 			writer.close();
 			fos.close();
 
 			showToast("Arquivo Salvo", Toast.LENGTH_SHORT);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			showToast("Erro de gravação.", Toast.LENGTH_SHORT);
 			return false;
@@ -299,15 +297,15 @@ public class RouteActivity extends AppCompatActivity
 		return true;
 	}
 
-	public void abrir(String path, String filename)	{
+	public void abrir(String path, String filename) {
 		pontos.clear();
 		marcas.clear();
-		File file = new File(path+"/"+filename);
+		File file = new File(path + "/" + filename);
 		Scanner inputFile = null;
 		String line = "";
 
 		try {
-			inputFile = new Scanner(file,"latin1");
+			inputFile = new Scanner(file, "latin1");
 
 			line = inputFile.nextLine();
 			if (!line.startsWith("<p>")) {
@@ -317,12 +315,12 @@ public class RouteActivity extends AppCompatActivity
 			line = inputFile.nextLine();
 			while (!line.equals("</p>")) {
 				String p = line.trim();
-				StringTokenizer st = new StringTokenizer(p,";",false);
+				StringTokenizer st = new StringTokenizer(p, ";", false);
 
 				Float lat = new Float(st.nextToken());
 				Float longi = new Float(st.nextToken());
 
-				LatLng ponto = new LatLng(lat,longi);
+				LatLng ponto = new LatLng(lat, longi);
 				pontos.add(ponto);
 				line = inputFile.nextLine();
 			}
@@ -334,14 +332,14 @@ public class RouteActivity extends AppCompatActivity
 			line = inputFile.nextLine();
 			while (!line.equals("</m>")) {
 				String p = line.trim();
-				StringTokenizer st = new StringTokenizer(p,";",false);
+				StringTokenizer st = new StringTokenizer(p, ";", false);
 
 				String tipo = st.nextToken();
 				String titulo = st.nextToken();
 
 				Float lat = new Float(st.nextToken());
 				Float longi = new Float(st.nextToken());
-				LatLng position = new LatLng(lat,longi);
+				LatLng position = new LatLng(lat, longi);
 
 				float color = 0f;
 
@@ -365,22 +363,22 @@ public class RouteActivity extends AppCompatActivity
 
 			exibeRota();
 			bSalvar.setEnabled(true);
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			if (inputFile != null)
 				inputFile.close();
 			showToast("Arquivo inválido", Toast.LENGTH_SHORT);
 			return;
-		};
+		}
+		;
 	}
 
 	private void exibeRota() {
-		for (int i=1;i<pontos.size();i++) {
-			LatLng ponto1 = pontos.get(i-1);
+		for (int i = 1; i < pontos.size(); i++) {
+			LatLng ponto1 = pontos.get(i - 1);
 			LatLng ponto2 = pontos.get(i);
 
 			mMap.addPolyline((new PolylineOptions())
-				.add(ponto1, ponto2).width(6).color(Color.argb(255,255,165,0))
+				.add(ponto1, ponto2).width(6).color(Color.argb(255, 255, 165, 0))
 				.visible(true));
 		}
 	}
@@ -408,7 +406,7 @@ public class RouteActivity extends AppCompatActivity
 
 		LatLng saoCarlos = new LatLng(-22.007373, -47.894752);
 		prevLatLng = saoCarlos;
-		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(saoCarlos,15));
+		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(saoCarlos, 15));
 	}
 
 
@@ -423,9 +421,9 @@ public class RouteActivity extends AppCompatActivity
 
 		LatLng currLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-		if(started) {
+		if (started) {
 			mMap.addPolyline((new PolylineOptions())
-				.add(prevLatLng, currLatLng).width(6).color(Color.argb(255,255,165,0))
+				.add(prevLatLng, currLatLng).width(6).color(Color.argb(255, 255, 165, 0))
 				.visible(true));
 			prevLatLng = new LatLng(currLatLng.latitude, currLatLng.longitude);
 
@@ -439,7 +437,8 @@ public class RouteActivity extends AppCompatActivity
 	}
 
 	@Override
-	public void onStatusChanged(String s, int i, Bundle bundle) {}
+	public void onStatusChanged(String s, int i, Bundle bundle) {
+	}
 
 	@Override
 	public void onProviderEnabled(String s) {
@@ -457,11 +456,11 @@ public class RouteActivity extends AppCompatActivity
 
 	@Override
 	public void onConfirmSelect(String absolutePath, String filename) {
-		if (absolutePath==null || filename==null)
+		if (absolutePath == null || filename == null)
 			return;
 
 		mMap.clear();
-		abrir(absolutePath,filename);
+		abrir(absolutePath, filename);
 	}
 
 	@Override
