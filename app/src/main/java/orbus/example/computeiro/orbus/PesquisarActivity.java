@@ -265,8 +265,8 @@ public class PesquisarActivity extends AppCompatActivity
 			marca.setTag(tipo);
 
 			for (int pIndex=0;pIndex<pontos.size();pIndex++) {
-				if (distance(position,pontos.get(i).getPonto())<0.01) {
-					MarcaOrbus mo = new MarcaOrbus(marca,pontos.get(i));
+				if (distance(position,pontos.get(pIndex).getPonto())<0.01) {
+					MarcaOrbus mo = new MarcaOrbus(marca,pontos.get(pIndex));
 					marcas.add(mo);
 					break;
 				}
