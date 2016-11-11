@@ -23,6 +23,8 @@
 	<string name="abrirCancelar">Cancelar</string>
 	<string name="abrirTitulo">Abrir</string>
 	<string name="abrirEditar">Nome do arquivo</string>
+	<string name="action_settings">Sign out</string>
+
 
 
 	<string name="label_emailpassword">Email/Password Authentication</string>

@@ -16,8 +16,10 @@ import android.location.LocationManager;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -73,6 +75,7 @@ public class PesquisarActivity extends AppCompatActivity
 	private ArrayList<PontoOrbus> pontos;
 	private ArrayList<MarcaOrbus> marcas;
 	private ArrayList<Onibus> listaOnibus;
+	private Toolbar toolbar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,9 @@ public class PesquisarActivity extends AppCompatActivity
 		pontos = new ArrayList<PontoOrbus>();
 		marcas = new ArrayList<MarcaOrbus>();
 		listaOnibus = new ArrayList<Onibus>();
+
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
 
 		mDatabase = FirebaseDatabase.getInstance().getReference();
 		mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -475,5 +481,12 @@ public class PesquisarActivity extends AppCompatActivity
 			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(posicaoAtual, 15));
 		else
 			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(saoCarlos, 15));
+	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu, menu);
+
+		return true;
 	}
 }
