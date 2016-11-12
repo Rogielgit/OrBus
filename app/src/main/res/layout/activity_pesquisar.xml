@@ -61,7 +61,7 @@
             android:gravity="left"
             android:minHeight="0dip"
             android:text="Pesquisar"
-            android:textColor="#FF4377a8"
+            android:enabled="false"
             android:textSize="14sp" />
 
         <LinearLayout

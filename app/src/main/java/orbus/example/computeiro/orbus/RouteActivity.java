@@ -487,10 +487,8 @@ public class RouteActivity extends AppCompatActivity
 				.visible(true));
 			prevLatLng = new LatLng(currLatLng.latitude, currLatLng.longitude);
 
-			CameraUpdate update = CameraUpdateFactory.newLatLngZoom(currLatLng, 15);
+			CameraUpdate update = CameraUpdateFactory.newLatLng(currLatLng);
 			mMap.animateCamera(update);
-
-			//mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currLatLng,15));
 
 			pontos.add(currLatLng);
 		}

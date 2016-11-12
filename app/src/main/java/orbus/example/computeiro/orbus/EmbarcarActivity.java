@@ -16,15 +16,10 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,150 +33,68 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.ui.IconGenerator;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.StringTokenizer;
 
+import static java.lang.System.currentTimeMillis;
 import static orbus.example.computeiro.orbus.R.id.map;
 
-public class PesquisarActivity extends AppCompatActivity
-		implements OnMapReadyCallback, LocationListener {
+public class EmbarcarActivity extends AppCompatActivity
+	implements OnMapReadyCallback, LocationListener {
 
 	private LatLng posicaoAtual = null;
 	private Marker you = null;
-	private Marker onibusMarker = null;
 	private GoogleMap mMap;
 	private LocationManager locationManager;
 	private DatabaseReference mDatabase;
-	private HashMap<String,Route> routesMap = new HashMap<String,Route>();
 	private ArrayList<PontoOrbus> pontos;
 	private ArrayList<MarcaOrbus> marcas;
-	private ArrayList<Onibus> listaOnibus;
-	private Toolbar toolbar;
-	private HashMap<Marker,MarcaOrbus> mapaMarcas = new HashMap<Marker, MarcaOrbus>();
-	private MarcaOrbus selectedMarker = null;
-
 	private String routeData;
 	private String routeName;
+	private Button bEmbarcar = null;
+	private Button bDesembarcar = null;
+	private String uid = "";
+	private ArrayList<OnibusPosicaoTempo> posicoes;
+	private Button bPesquisar;
+	private boolean embarcado;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_pesquisar);
+		setContentView(R.layout.activity_embarcar);
 
-		Button bEmbarcar = (Button)findViewById(R.id.bMenuEmbarcar);
-
-		bEmbarcar.setOnClickListener(new View.OnClickListener() {
+		bPesquisar = (Button)findViewById(R.id.bMenuPesquisar);
+		bPesquisar.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(PesquisarActivity.this, EmbarcarActivity.class);
-				Bundle b = new Bundle();
-				b.putString("routeName",routeName);
-				b.putString("routeData",routeData);
-				intent.putExtras(b);
-				startActivity(intent);
-			}
-		});
-
-		pontos = new ArrayList<PontoOrbus>();
-		marcas = new ArrayList<MarcaOrbus>();
-		listaOnibus = new ArrayList<Onibus>();
-
-		toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-
-		mDatabase = FirebaseDatabase.getInstance().getReference();
-		mDatabase.addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(DataSnapshot snapshot) {
-				routesMap.clear();
-				Spinner routeSpinner = (Spinner)findViewById(R.id.routeSpinner);
-				List<String> spinnerArray =  new ArrayList<String>();
-				spinnerArray.add("Pesquisar...");
-
-				for (DataSnapshot routes : snapshot.child("routes").getChildren()) {
-					Route route = routes.getValue(Route.class);
-					if (route!=null) {
-						String name = route.getName();
-						String value = route.getValue();
-
-						spinnerArray.add(name);
-						routesMap.put(name,route);
-
-						String string = "Name: "+name+"\nValue: "+value+"\n\n";
-					}
-				}
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-					PesquisarActivity.this, android.R.layout.simple_spinner_item, spinnerArray);
-
-				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-				routeSpinner.setAdapter(adapter);
-				findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-
-				if (routeName!=null) {
-					listaOnibus.clear();
-					for (DataSnapshot bus : snapshot.child("location").child(routeName).getChildren()) {
-						String s = bus.getValue(String.class);
-						if (s != null) {
-							String[] busData = s.split(";");
-							Float lat = new Float(busData[0]);
-							Float lng = new Float(busData[1]);
-							Float speed = new Float(busData[2]);
-
-							Onibus o = new Onibus(new LatLng(lat,lng),speed);
-							listaOnibus.add(o);
-						}
-					}
-
-					if (selectedMarker != null) {
-						showInfoWindow();
-					}
-				}
-			}
-
-			@Override
-			public void onCancelled(DatabaseError databaseError) {
-				Log.e("RouteActivity","Erro lendo banco de dados.");
 				finish();
 			}
 		});
 
-		Button bPesquisar = (Button) findViewById(R.id.bPesquisar);
-		bPesquisar.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View arg0) {
-				((Spinner)findViewById(R.id.routeSpinner)).performClick();
-			}
-		});
+		posicoes = new ArrayList<OnibusPosicaoTempo>();
 
+		bEmbarcar = (Button) findViewById(R.id.bEmbarcar);
+		bDesembarcar = (Button) findViewById(R.id.bDesembarcar);
 
+		Bundle b = getIntent().getExtras();
+		if (b != null) {
+			routeName = b.getString("routeName");
+			routeData = b.getString("routeData");
+		}
 
-		Spinner routeSpinner = (Spinner)findViewById(R.id.routeSpinner);
-		routeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view,
-																 int position, long id) {
-				String selected = parent.getSelectedItem().toString();
-				if (!selected.equals("Pesquisar...")) {
-					abrir(routesMap.get(selected));
-					showToast("Rota Carregada!", Toast.LENGTH_SHORT);
-					((Button)findViewById(R.id.bMenuEmbarcar)).setEnabled(true);
-				}
-			}
+		TextView routeNameText = (TextView) findViewById(R.id.routeName);
+		routeNameText.setText(routeName);
 
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-			}
-		});
+		pontos = new ArrayList<PontoOrbus>();
+		marcas = new ArrayList<MarcaOrbus>();
+
+		mDatabase = FirebaseDatabase.getInstance().getReference();
 
 		// Inicializar mapa
 		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -204,54 +117,39 @@ public class PesquisarActivity extends AppCompatActivity
 			Log.e("RouteActivity", "Permission Error");
 		}
 
-
-
-
-
-
-		// DELETAR // TODO
-		Button bRoute = (Button) findViewById(R.id.bRota);
-		bRoute.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View arg0) {
-
-				// Start NewActivity.class
-				Intent myIntent = new Intent(PesquisarActivity.this,
-					RouteActivity.class);
-				startActivity(myIntent);
+		bEmbarcar.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				bDesembarcar.setVisibility(View.VISIBLE);
+				bEmbarcar.setVisibility(View.GONE);
+				embarcado = true;
+				posicoes.clear();
 			}
 		});
-	}
 
-	private void showInfoWindow() {
-		Onibus o = getBusClosestToMark(selectedMarker);
-		if (o!=null) {
-			double distance = selectedMarker.getPonto().getDistanciaAteInicio() - o.getDistanciaAteInicio();
+		bDesembarcar.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				bDesembarcar.setVisibility(View.GONE);
+				bEmbarcar.setVisibility(View.VISIBLE);
+				embarcado = false;
+			}
+		});
 
-			double tempoEstimado = distance/o.getVelocidade()/60;
-
-			NumberFormat formatter = new DecimalFormat("#0.00");
-
-			selectedMarker.getMarker().setSnippet("Tempo estimado: "+ formatter.format(tempoEstimado) + " min");
-			selectedMarker.getMarker().showInfoWindow();
-
-			if (onibusMarker==null)
-				onibusMarker = createBubbleMarker(o.getPosicao(),"Onibus","Próximo ônibus");
-			else
-				onibusMarker.setPosition(o.getPosicao());
-			onibusMarker.setVisible(true);
+		FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+		if (user != null) {
+			uid = user.getUid();
+		} else {
+			showToast("Erro carregando conta de usuário.", Toast.LENGTH_SHORT);
+			finish();
 		}
-		else
-			onibusMarker.setVisible(false);
 	}
 
-	public void abrir(Route route) {
+	public void abrir(String route) {
 		pontos.clear();
 		marcas.clear();
 
-		routeData = route.getValue();
-		routeName = route.getName();
-
-		String[] lines = route.getValue().split("\n");
+		String[] lines = route.split("\n");
 
 		int i = 0;
 
@@ -271,12 +169,11 @@ public class PesquisarActivity extends AppCompatActivity
 			LatLng ponto = new LatLng(lat, longi);
 
 			PontoOrbus pontoOrbus = null;
-			if (pontos.size()==0) {
-				pontoOrbus = new PontoOrbus(ponto,0);
-			}
-			else {
-				double distance = distance(ponto,pontos.get(pontos.size()-1).getPonto());
-				pontoOrbus = new PontoOrbus(ponto,distance+pontos.get(pontos.size()-1).getDistanciaAteInicio());
+			if (pontos.size() == 0) {
+				pontoOrbus = new PontoOrbus(ponto, 0);
+			} else {
+				double distance = distance(ponto, pontos.get(pontos.size() - 1).getPonto());
+				pontoOrbus = new PontoOrbus(ponto, distance);
 			}
 
 			pontos.add(pontoOrbus);
@@ -319,11 +216,10 @@ public class PesquisarActivity extends AppCompatActivity
 				.icon(BitmapDescriptorFactory.defaultMarker(color)));
 			marca.setTag(tipo);
 
-			for (int pIndex=0;pIndex<pontos.size();pIndex++) {
-				if (distance(position,pontos.get(pIndex).getPonto())<0.01) {
-					MarcaOrbus mo = new MarcaOrbus(marca,pontos.get(pIndex));
+			for (int pIndex = 0; pIndex < pontos.size(); pIndex++) {
+				if (distance(position, pontos.get(pIndex).getPonto()) < 0.01) {
+					MarcaOrbus mo = new MarcaOrbus(marca, pontos.get(pIndex));
 					marcas.add(mo);
-					mapaMarcas.put(marca,mo);
 					break;
 				}
 			}
@@ -335,49 +231,7 @@ public class PesquisarActivity extends AppCompatActivity
 		exibeRota();
 	}
 
-	private Onibus getBusClosestToMark(MarcaOrbus mo) {
-		double minDistance = 100000000;
-		double distance;
-		Onibus closestBus = null;
-
-		for (int i=0; i<listaOnibus.size() ; i++) {
-			Onibus onibus = listaOnibus.get(i);
-			PontoOrbus po = getClosestPontoOrbus(onibus.getPosicao());
-			if (po==null)
-				continue;
-			onibus.setDistanciaAteInicio(po.getDistanciaAteInicio());
-			distance = mo.getPonto().getDistanciaAteInicio() - po.getDistanciaAteInicio();
-			if (distance<0)
-				break;
-			if (distance<minDistance) {
-				minDistance = distance;
-				closestBus = onibus;
-			}
-		}
-
-		return closestBus;
-	}
-
-	private PontoOrbus getClosestPontoOrbus(LatLng posicao) {
-		double minDistance = 100000000;
-		double distance;
-		PontoOrbus closestPO = null;
-		for (int i=0;i<pontos.size();i++) {
-			PontoOrbus po = pontos.get(i);
-			distance = distance(po.getPonto(),posicao);
-			if (distance<minDistance) {
-				minDistance = distance;
-				closestPO = po;
-			}
-		}
-
-		if (minDistance>20)
-			return null;
-
-		return closestPO;
-	}
-
-	private float distance (LatLng p1, LatLng p2) {
+	private float distance(LatLng p1, LatLng p2) {
 		Location loc1 = new Location("");
 		loc1.setLatitude(p1.latitude);
 		loc1.setLongitude(p1.longitude);
@@ -404,15 +258,46 @@ public class PesquisarActivity extends AppCompatActivity
 
 	@Override
 	public void onLocationChanged(Location location) {
+		//updateLocation(location);
+	}
+
+	private void updateLocation(Location location) {
 		posicaoAtual = new LatLng(location.getLatitude(), location.getLongitude());
 
 		if (you == null) {
-			you = createBubbleMarker(posicaoAtual,"Você","Você está aqui!");
+			you = createBubbleMarker(posicaoAtual);
 		} else {
 			you.setPosition(posicaoAtual);
 		}
 
-		CameraUpdate update = CameraUpdateFactory.newLatLngZoom(posicaoAtual, 15);
+		if (embarcado) {
+			OnibusPosicaoTempo opt = new OnibusPosicaoTempo(posicaoAtual, currentTimeMillis());
+			if (posicoes.size() < 20)
+				posicoes.add(opt);
+			else {
+				posicoes.remove(0);
+				posicoes.add(opt);
+			}
+
+			float distance;
+			long time;
+			float speedAvg = 0;
+			for (int i = 1; i < posicoes.size(); i++) {
+				distance = distance(posicoes.get(i).getPosicao(), posicoes.get(i - 1).getPosicao());
+				time = posicoes.get(i).getTempo() - posicoes.get(i - 1).getTempo();
+				speedAvg += distance / (time / 1000f);
+			}
+
+			if (posicoes.size()>0) {
+				speedAvg = speedAvg / posicoes.size();
+
+				String posString = "" + opt.getPosicao().latitude + ";" + opt.getPosicao().longitude + ";" + speedAvg;
+				mDatabase.child("location").child(routeName)
+					.child(uid).setValue(posString);
+			}
+		}
+
+		CameraUpdate update = CameraUpdateFactory.newLatLng(posicaoAtual);
 		mMap.animateCamera(update);
 	}
 
@@ -433,7 +318,7 @@ public class PesquisarActivity extends AppCompatActivity
 		toast.show();
 	}
 
-	public Marker createBubbleMarker(LatLng position, String texto, String description) {
+	public Marker createBubbleMarker(LatLng position) {
 		IconGenerator iconGenerator = new IconGenerator(this);
 		iconGenerator.setStyle(IconGenerator.STYLE_WHITE);
 		Bitmap iconBitmap = iconGenerator.makeIcon("Você");
@@ -478,15 +363,15 @@ public class PesquisarActivity extends AppCompatActivity
 
 		float[] textWidth = new float[1];
 		float[] textHeight = new float[1];
-		setTextSizeForWidth(color, width * 2f / 3f, texto, textWidth, textHeight);
+		setTextSizeForWidth(color, width * 2f / 3f, "Você", textWidth, textHeight);
 
 		float textX = (areaWidth - textWidth[0]) / 2f;
 		float textY = areaHeight - ((areaHeight - textHeight[0]) / 2f);
-		canvas.drawText(texto, textX, textY, color);
+		canvas.drawText("Você", textX, textY, color);
 
 		Marker m = mMap.addMarker(new MarkerOptions()
 			.icon(BitmapDescriptorFactory.fromBitmap(bitmap)).zIndex(1000)
-			.position(position).title(description)
+			.position(position).title("Você está aqui!")
 			.anchor((height / 5f + height / 10f + 1f) / width, 1f));
 
 		return m;
@@ -512,7 +397,8 @@ public class PesquisarActivity extends AppCompatActivity
 	}
 
 	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {}
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+	}
 
 	@Override
 	public void onProviderEnabled(String s) {
@@ -533,29 +419,24 @@ public class PesquisarActivity extends AppCompatActivity
 		mMap = googleMap;
 
 		LatLng saoCarlos = new LatLng(-22.007373, -47.894752);
-		if (posicaoAtual!=null)
+		if (posicaoAtual != null)
 			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(posicaoAtual, 15));
 		else
 			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(saoCarlos, 15));
 
-		mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+		// TODO Remover
+		mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 			@Override
-			public boolean onMarkerClick(Marker marker) {
-				MarcaOrbus mo = mapaMarcas.get(marker);
-				if (mo==null)
-					return true;
+			public void onMapClick(LatLng latLng) {
 
-				selectedMarker = mo;
-				showInfoWindow();
-				return false;
+				Location location = new Location(LocationManager.GPS_PROVIDER);
+				location.setLatitude(latLng.latitude);
+				location.setLongitude(latLng.longitude);
+
+				updateLocation(location);
 			}
 		});
-	}
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu, menu);
 
-		return true;
+		abrir(routeData);
 	}
 }

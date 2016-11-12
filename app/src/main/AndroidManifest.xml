@@ -58,6 +58,12 @@
 			android:label="@string/app_name"
 			>
 		</activity>
+		<activity
+			android:name=".EmbarcarActivity"
+			android:theme="@style/AppTheme.NoActionBar"
+			android:label="@string/app_name"
+			>
+		</activity>
 	</application>
 
 </manifest>
