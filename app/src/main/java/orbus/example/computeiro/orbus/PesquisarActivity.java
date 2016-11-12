@@ -240,7 +240,7 @@ public class PesquisarActivity extends AppCompatActivity
 				onibusMarker.setPosition(o.getPosicao());
 			onibusMarker.setVisible(true);
 		}
-		else
+		else if (onibusMarker!=null)
 			onibusMarker.setVisible(false);
 	}
 

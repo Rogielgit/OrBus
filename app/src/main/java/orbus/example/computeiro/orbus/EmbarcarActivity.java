@@ -133,6 +133,8 @@ public class EmbarcarActivity extends AppCompatActivity
 				bDesembarcar.setVisibility(View.GONE);
 				bEmbarcar.setVisibility(View.VISIBLE);
 				embarcado = false;
+
+				mDatabase.child("location").child(routeName).removeValue();
 			}
 		});
 
