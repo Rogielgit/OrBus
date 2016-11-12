@@ -1,7 +1,7 @@
 <resources>
 	<string name="app_name">OrBus</string>
 	<string name="title_activity_maps">Map</string>
-	<string name="title_activity_login">Sign in</string>
+	<string name="title_activity_login">Orbus</string>
 
 	<!-- Strings related to login -->
 	<string name="prompt_email">Email</string>
@@ -15,6 +15,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+	<string name="Sobre">Sobre</string>
 	<string name="salvarOk">Salvar</string>
 	<string name="salvarCancelar">Cancelar</string>
 	<string name="salvarTitulo">Salvar</string>
@@ -41,11 +42,11 @@
 
 	<string name="hint_user_id">User ID</string>
 	<string name="get_custom_token">Get Token</string>
-	<string name="sign_in">Sign In</string>
-	<string name="create_account">Create Account</string>
+	<string name="sign_in">Login</string>
+	<string name="create_account">Criar Conta</string>
 	<string name="sign_out">Sign Out</string>
 	<string name="disconnect">Disconnect</string>
-	<string name="loading">Loading…</string>
+	<string name="loading">Carregando…</string>
 	<string name="custom_token">Custom Token</string>
 	<string name="signed_out">Signed Out</string>
 	<string name="hint_email">Email</string>

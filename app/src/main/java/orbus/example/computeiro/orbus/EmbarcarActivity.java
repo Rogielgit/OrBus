@@ -16,8 +16,11 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -63,11 +66,15 @@ public class EmbarcarActivity extends AppCompatActivity
 	private ArrayList<OnibusPosicaoTempo> posicoes;
 	private Button bPesquisar;
 	private boolean embarcado;
+	private Toolbar toolbar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_embarcar);
+
+		toolbar = (Toolbar)findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
 
 		bPesquisar = (Button)findViewById(R.id.bMenuPesquisar);
 		bPesquisar.setOnClickListener(new View.OnClickListener() {
@@ -440,5 +447,29 @@ public class EmbarcarActivity extends AppCompatActivity
 		});
 
 		abrir(routeData);
+	}
+	public boolean onOptionsItemSelected (MenuItem item)
+	{
+		FirebaseAuth mAuth;
+		mAuth = FirebaseAuth.getInstance();
+		int id;
+		id  = item.getItemId();
+		if(id == R.id.action_settings) {
+			mAuth.signOut();
+			Intent it = new Intent(EmbarcarActivity.this,LoginActivity.class);
+			startActivity(it);
+
+		}
+		else if (id == R.id.aboutProjet)
+			setContentView(R.layout.activity_sobre);
+
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu, menu);
+		return true;
 	}
 }
