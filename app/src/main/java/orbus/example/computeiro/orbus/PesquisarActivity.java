@@ -348,7 +348,7 @@ public class PesquisarActivity extends AppCompatActivity
 			onibus.setDistanciaAteInicio(po.getDistanciaAteInicio());
 			distance = mo.getPonto().getDistanciaAteInicio() - po.getDistanciaAteInicio();
 			if (distance<0)
-				break;
+				continue;
 			if (distance<minDistance) {
 				minDistance = distance;
 				closestBus = onibus;
@@ -371,7 +371,7 @@ public class PesquisarActivity extends AppCompatActivity
 			}
 		}
 
-		if (minDistance>20)
+		if (minDistance>50)
 			return null;
 
 		return closestPO;
