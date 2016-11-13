@@ -260,7 +260,7 @@ public class EmbarcarActivity extends AppCompatActivity
 
 	@Override
 	public void onLocationChanged(Location location) {
-		//updateLocation(location);
+		updateLocation(location);
 	}
 
 	private void updateLocation(Location location) {
@@ -290,12 +290,14 @@ public class EmbarcarActivity extends AppCompatActivity
 				speedAvg += distance / (time / 1000f);
 			}
 
-			if (posicoes.size()>0) {
+			if (posicoes.size()>1) {
 				speedAvg = speedAvg / posicoes.size();
 
-				String posString = "" + opt.getPosicao().latitude + ";" + opt.getPosicao().longitude + ";" + speedAvg;
+				OnibusFirebase of = new OnibusFirebase(
+					opt.getPosicao().latitude,opt.getPosicao().longitude,speedAvg);
+
 				mDatabase.child("location").child(routeName)
-					.child(uid).setValue(posString);
+					.child(uid).setValue(of);
 			}
 		}
 
@@ -426,18 +428,19 @@ public class EmbarcarActivity extends AppCompatActivity
 		else
 			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(saoCarlos, 15));
 
-		// TODO Remover
-		mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-			@Override
-			public void onMapClick(LatLng latLng) {
-
-				Location location = new Location(LocationManager.GPS_PROVIDER);
-				location.setLatitude(latLng.latitude);
-				location.setLongitude(latLng.longitude);
-
-				updateLocation(location);
-			}
-		});
+		// TODO Remover, tirar comentário pra testar clicando no mapa
+//		mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+//			@Override
+//			public void onMapClick(LatLng latLng) {
+//
+//				Location location = new Location(LocationManager.GPS_PROVIDER);
+//				location.setLatitude(latLng.latitude);
+//				location.setLongitude(latLng.longitude);
+//
+//				updateLocation(location);
+//			}
+//		});
+		// TODO Remover até aqui
 
 		abrir(routeData);
 	}

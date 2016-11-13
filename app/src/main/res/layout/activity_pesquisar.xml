@@ -107,6 +107,7 @@
             android:minHeight="0dip"
             android:text="Rota"
             android:textColor="#FF4377a8"
+            android:visibility="gone"
             android:textSize="14sp" />
 
     </LinearLayout>

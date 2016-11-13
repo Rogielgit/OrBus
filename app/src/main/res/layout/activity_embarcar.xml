@@ -76,17 +76,6 @@
 			android:textSize="14sp"
 			style="@style/menuButtonStyle"/>
 
-		<Button
-			android:text="Rota"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:minHeight="0dip"
-			android:gravity="left"
-			android:id="@+id/bRota"
-			android:textColor="#FF4377a8"
-			android:textSize="14sp"
-			style="@style/menuButtonStyle"/>
-
 	</LinearLayout>
 	<LinearLayout
 		android:orientation="horizontal"
