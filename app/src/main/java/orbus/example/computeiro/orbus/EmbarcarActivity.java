@@ -16,8 +16,11 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -63,11 +66,15 @@ public class EmbarcarActivity extends AppCompatActivity
 	private ArrayList<OnibusPosicaoTempo> posicoes;
 	private Button bPesquisar;
 	private boolean embarcado;
+	private Toolbar toolbar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_embarcar);
+
+		toolbar = (Toolbar)findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
 
 		bPesquisar = (Button)findViewById(R.id.bMenuPesquisar);
 		bPesquisar.setOnClickListener(new View.OnClickListener() {
@@ -260,7 +267,7 @@ public class EmbarcarActivity extends AppCompatActivity
 
 	@Override
 	public void onLocationChanged(Location location) {
-		updateLocation(location);
+		//updateLocation(location);
 	}
 
 	private void updateLocation(Location location) {
@@ -290,14 +297,12 @@ public class EmbarcarActivity extends AppCompatActivity
 				speedAvg += distance / (time / 1000f);
 			}
 
-			if (posicoes.size()>1) {
+			if (posicoes.size()>0) {
 				speedAvg = speedAvg / posicoes.size();
 
-				OnibusFirebase of = new OnibusFirebase(
-					opt.getPosicao().latitude,opt.getPosicao().longitude,speedAvg);
-
+				String posString = "" + opt.getPosicao().latitude + ";" + opt.getPosicao().longitude + ";" + speedAvg;
 				mDatabase.child("location").child(routeName)
-					.child(uid).setValue(of);
+					.child(uid).setValue(posString);
 			}
 		}
 
@@ -428,20 +433,43 @@ public class EmbarcarActivity extends AppCompatActivity
 		else
 			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(saoCarlos, 15));
 
-		// TODO Remover, tirar comentário pra testar clicando no mapa
-//		mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-//			@Override
-//			public void onMapClick(LatLng latLng) {
-//
-//				Location location = new Location(LocationManager.GPS_PROVIDER);
-//				location.setLatitude(latLng.latitude);
-//				location.setLongitude(latLng.longitude);
-//
-//				updateLocation(location);
-//			}
-//		});
-		// TODO Remover até aqui
+		// TODO Remover
+		mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+			@Override
+			public void onMapClick(LatLng latLng) {
+
+				Location location = new Location(LocationManager.GPS_PROVIDER);
+				location.setLatitude(latLng.latitude);
+				location.setLongitude(latLng.longitude);
+
+				updateLocation(location);
+			}
+		});
 
 		abrir(routeData);
+	}
+	public boolean onOptionsItemSelected (MenuItem item)
+	{
+		FirebaseAuth mAuth;
+		mAuth = FirebaseAuth.getInstance();
+		int id;
+		id  = item.getItemId();
+		if(id == R.id.action_settings) {
+			mAuth.signOut();
+			Intent it = new Intent(EmbarcarActivity.this,LoginActivity.class);
+			startActivity(it);
+
+		}
+		else if (id == R.id.aboutProjet)
+			setContentView(R.layout.activity_sobre);
+
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu, menu);
+		return true;
 	}
 }

@@ -36,7 +36,6 @@ public class LoginActivity extends BaseActivity implements
 	// [START declare_auth]
 	private FirebaseAuth mAuth;
 	// [END declare_auth]
-
 	// [START declare_auth_listener]
 	private FirebaseAuth.AuthStateListener mAuthListener;
 	// [END declare_auth_listener]
@@ -64,7 +63,6 @@ public class LoginActivity extends BaseActivity implements
 
 		//[START initialize_auth]
 		mAuth = FirebaseAuth.getInstance();
-        //signOut();
 		// [END initialize_auth]
 
 		// [START auth_state_listener]
@@ -85,7 +83,7 @@ public class LoginActivity extends BaseActivity implements
 				// [END_EXCLUDE]
 			}
 		};
-		// [END auth_state_listener]
+		// [END auth_state_listener]9
 
 	}
 
@@ -170,6 +168,7 @@ public class LoginActivity extends BaseActivity implements
 				}
 			});
 		// [END sign_in_with_email]
+
 	}
 
 	private void signOut() {
@@ -219,15 +218,6 @@ public class LoginActivity extends BaseActivity implements
 
 			Intent it = new Intent(LoginActivity.this, PesquisarActivity.class);
 			startActivity(it);
-		} else {
-
-
-			mStatusTextView.setText(R.string.signed_out);
-			mDetailTextView.setText(null);
-
-			findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
-			findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
-			findViewById(R.id.sign_out_button).setVisibility(View.GONE);
 		}
 	}
 
@@ -238,8 +228,6 @@ public class LoginActivity extends BaseActivity implements
 			createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
 		} else if (i == R.id.email_sign_in_button) {
 			signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
-		} else if (i == R.id.sign_out_button) {
-			signOut();
 		}
 	}
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -247,19 +235,17 @@ public class LoginActivity extends BaseActivity implements
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            signOut();
-            return true;
-        }
+		if(id ==R.id.aboutProjet)
+		{
+			setContentView(R.layout.activity_sobre);
+			//return true;
+		}
         return super.onOptionsItemSelected(item);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu, menu);
-
+        getMenuInflater().inflate(R.menu.menulogin, menu);
         return true;
     }
 }

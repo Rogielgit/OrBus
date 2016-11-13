@@ -1,154 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-							xmlns:map="http://schemas.android.com/apk/res-auto"
-							android:layout_toEndOf="@+id/main_layout"
-							xmlns:tools="http://schemas.android.com/tools"
-							style="@style/ThemeOverlay.MyBrackground"
-							android:layout_width="match_parent"
-							android:layout_height="match_parent"
-							android:orientation="vertical"
-							android:weightSum="4">
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ThemeOverlay.MyBrackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_toEndOf="@+id/main_layout"
+    android:orientation="vertical"
+    android:weightSum="4">
 
-	<android.support.design.widget.AppBarLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:theme="@style/AppTheme.AppBarOverlay">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-		<android.support.v7.widget.Toolbar
-			android:id="@+id/toolbar"
-			android:layout_width="match_parent"
-			android:layout_height="?attr/actionBarSize"
-			android:background="?attr/colorPrimary"
-			app.popupTheme="@style/AppTheme.PopupOverlay" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            app.popupTheme="@style/AppTheme.PopupOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary" />
 
-	</android.support.design.widget.AppBarLayout>
+    </android.support.design.widget.AppBarLayout>
 
-	<LinearLayout
-		android:orientation="horizontal"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
 
-		<Button
-			android:text="Pesquisar"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:minHeight="0dip"
-			android:gravity="left"
-			android:id="@+id/bMenuPesquisar"
-			android:textColor="#FF4377a8"
-			android:textSize="14sp"
-			style="@style/menuButtonStyle"/>
+        <Button
+            android:id="@+id/bMenuPesquisar"
+            style="@style/menuButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:minHeight="0dip"
+            android:text="Pesquisar"
+            android:textColor="#FF4377a8"
+            android:textSize="14sp" />
 
-		<LinearLayout
-			android:layout_width="3dp"
-			android:layout_height="match_parent"
-			android:background="#FF000000"
-			android:orientation="horizontal">
-			</LinearLayout>
+        <LinearLayout
+            android:layout_width="3dp"
+            android:layout_height="match_parent"
+            android:background="#FF000000"
+            android:orientation="horizontal"></LinearLayout>
 
-		<Button
-			android:text="Embarcar"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:minHeight="0dip"
-			android:gravity="left"
-			android:id="@+id/bMenuEmbarcar"
-			android:textSize="14sp"
-			android:enabled="false"
-			style="@style/menuButtonStyle"/>
+        <Button
+            android:id="@+id/bMenuEmbarcar"
+            style="@style/menuButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:gravity="left"
+            android:minHeight="0dip"
+            android:text="Embarcar"
+            android:textSize="14sp" />
 
-		<LinearLayout
-			android:layout_width="3dp"
-			android:layout_height="match_parent"
-			android:background="#FF000000"
-			android:orientation="horizontal">
-		</LinearLayout>
+        <LinearLayout
+            android:layout_width="3dp"
+            android:layout_height="match_parent"
+            android:background="#FF000000"
+            android:orientation="horizontal"></LinearLayout>
 
-		<Button
-			android:text="Sobre"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:minHeight="0dip"
-			android:gravity="left"
-			android:id="@+id/bMenuSobre"
-			android:textColor="#FF4377a8"
-			android:textSize="14sp"
-			style="@style/menuButtonStyle"/>
+        <Button
+            android:id="@+id/bMenuSobre"
+            style="@style/menuButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:minHeight="0dip"
+            android:text="Sobre"
+            android:textColor="#FF4377a8"
+            android:textSize="14sp" />
 
-	</LinearLayout>
-	<LinearLayout
-		android:orientation="horizontal"
-		android:layout_margin="10dp"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true">
+        <Button
+            android:id="@+id/bRota"
+            style="@style/menuButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:minHeight="0dip"
+            android:text="Rota"
+            android:textColor="#FF4377a8"
+            android:textSize="14sp" />
 
-		<TextView
-			android:text="TextView"
-			android:textColor="#FF000000"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:paddingRight="10dp"
-			android:paddingLeft="5dp"
-			android:minHeight="40dp"
-			android:textAlignment="center"
-			android:gravity="center"
-			android:id="@+id/routeName"
-			android:background="@drawable/button_selector_main"/>
-	</LinearLayout>
+    </LinearLayout>
 
-	<LinearLayout
-		android:orientation="horizontal"
-		android:layout_marginBottom="10dp"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
-		android:layout_centerHorizontal="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
 
-		<Button
-			android:text="Embarcar"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:id="@+id/bEmbarcar"
-			android:paddingRight="10dp"
-			android:paddingLeft="5dp"
-			android:layout_marginRight="10dp"
-			android:minHeight="36dp"
-			android:background="@drawable/button_selector_main"
-			android:textColor="#FF000000"/>
+        <TextView
+            android:id="@+id/routeName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_selector_main"
+            android:gravity="center"
+            android:minHeight="40dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="#FF000000" />
+    </LinearLayout>
 
-		<Button
-			android:text="Desembarcar"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:id="@+id/bDesembarcar"
-			android:paddingRight="10dp"
-			android:paddingLeft="5dp"
-			android:layout_marginRight="10dp"
-			android:minHeight="36dp"
-			android:visibility="gone"
-			android:background="@drawable/button_selector_main"
-			android:textColor="#FF000000"/>
-	</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-	<LinearLayout
-		android:orientation="horizontal"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true">
+        <Button
+            android:id="@+id/bEmbarcar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_selector_main"
+            android:minHeight="36dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:text="Embarcar"
+            android:textColor="#FF000000" />
 
-		<fragment
-			android:id="@+id/map"
-			android:name="com.google.android.gms.maps.SupportMapFragment"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			tools:context="orbus.orbus.com.orbus.RouteActivity"
-			map:uiZoomControls="false"
-			map:uiZoomGestures="true"
-			map:cameraZoom="5"
-			/>
-	</LinearLayout>
+        <Button
+            android:id="@+id/bDesembarcar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_selector_main"
+            android:minHeight="36dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:text="Desembarcar"
+            android:textColor="#FF000000"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            map:cameraZoom="5"
+            map:uiZoomControls="false"
+            map:uiZoomGestures="true"
+            tools:context="orbus.orbus.com.orbus.RouteActivity" />
+    </LinearLayout>
 </LinearLayout>

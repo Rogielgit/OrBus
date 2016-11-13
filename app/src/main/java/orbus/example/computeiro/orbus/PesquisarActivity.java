@@ -15,11 +15,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -38,6 +40,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.nearby.messages.internal.Update;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -54,8 +57,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import static orbus.example.computeiro.orbus.R.id.bEmbarcar;
 import static orbus.example.computeiro.orbus.R.id.map;
+import static orbus.example.computeiro.orbus.R.id.match_global_nicknames;
 
 public class PesquisarActivity extends AppCompatActivity
 		implements OnMapReadyCallback, LocationListener {
@@ -73,25 +76,16 @@ public class PesquisarActivity extends AppCompatActivity
 	private Toolbar toolbar;
 	private HashMap<Marker,MarcaOrbus> mapaMarcas = new HashMap<Marker, MarcaOrbus>();
 	private MarcaOrbus selectedMarker = null;
-	private boolean timestampSet = false;
-	private long timestampServer;
-	private long timestampClient;
-	private long timestampDifference;
-	private String uid = null;
-	private String email;
-	private ArrayList<String> adminEmails;
 
 	private String routeData;
 	private String routeName;
+	
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pesquisar);
-
-		adminEmails = new ArrayList<String>();
-		adminEmails.add("rogiel2009@gmail.com");
-		adminEmails.add("jorgebonafe@gmail.com");
 
 		Button bEmbarcar = (Button)findViewById(R.id.bMenuEmbarcar);
 
@@ -145,46 +139,21 @@ public class PesquisarActivity extends AppCompatActivity
 				if (routeName!=null) {
 					listaOnibus.clear();
 					for (DataSnapshot bus : snapshot.child("location").child(routeName).getChildren()) {
+						String s = bus.getValue(String.class);
+						if (s != null) {
+							String[] busData = s.split(";");
+							Float lat = new Float(busData[0]);
+							Float lng = new Float(busData[1]);
+							Float speed = new Float(busData[2]);
 
-						OnibusFirebase of = bus.getValue(OnibusFirebase.class);
-						if (of != null) {
-							long timestamp = of.getTimestampCreatedLong();
-							long currentTime = System.currentTimeMillis();
-							long age = currentTime-timestampDifference-timestamp;
-
-							if (age > 60000) {
-								mDatabase.child("location").child(routeName).child(bus.getKey()).removeValue();
-							}
-							else {
-								Double lat = of.getLatitude();
-								Double lng = of.getLongitude();
-								Float speed = of.getSpeed();
-
-								Onibus o = new Onibus(new LatLng(lat, lng), speed);
-								listaOnibus.add(o);
-							}
+							Onibus o = new Onibus(new LatLng(lat,lng),speed);
+							listaOnibus.add(o);
 						}
 					}
 
-					clearMarkerInfo();
 					if (selectedMarker != null) {
 						showInfoWindow();
 					}
-				}
-
-				if (uid != null) {
-					OnibusFirebase of = snapshot.child(uid+"-timestamp").getValue(OnibusFirebase.class);
-					if (of != null) {
-						timestampServer = of.getTimestampCreatedLong();
-						timestampDifference = timestampClient-timestampServer;
-						mDatabase.child(uid+"-timestamp").removeValue();
-
-						Log.v("DIFERENCA",""+timestampDifference);
-					}
-
-					String s = snapshot.child(uid+"-update").getValue(String.class);
-					if (s!=null)
-						mDatabase.child(uid+"-update").removeValue();
 				}
 			}
 
@@ -195,29 +164,14 @@ public class PesquisarActivity extends AppCompatActivity
 			}
 		});
 
-		FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-		if (user != null) {
-			uid = user.getUid();
-			email = user.getEmail();
-			if (adminEmails.contains(email))
-				((Button)findViewById(R.id.bRota)).setVisibility(View.VISIBLE);
-		} else {
-			showToast("Erro carregando conta de usuário.", Toast.LENGTH_SHORT);
-			finish();
-		}
-
-		OnibusFirebase of = new OnibusFirebase(0,0,0);
-		mDatabase.child(uid+"-timestamp").setValue(of);
-
-		timestampClient = System.currentTimeMillis();
-
 		Button bPesquisar = (Button) findViewById(R.id.bPesquisar);
 		bPesquisar.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
 				((Spinner)findViewById(R.id.routeSpinner)).performClick();
 			}
 		});
+
+
 
 		Spinner routeSpinner = (Spinner)findViewById(R.id.routeSpinner);
 		routeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -274,12 +228,7 @@ public class PesquisarActivity extends AppCompatActivity
 				startActivity(myIntent);
 			}
 		});
-	}
 
-	private void clearMarkerInfo() {
-		for (MarcaOrbus mo:marcas) {
-			mo.getMarker().setSnippet(null);
-		}
 	}
 
 	private void showInfoWindow() {
@@ -295,7 +244,7 @@ public class PesquisarActivity extends AppCompatActivity
 			selectedMarker.getMarker().showInfoWindow();
 
 			if (onibusMarker==null)
-				onibusMarker = createBubbleMarker(o.getPosicao(),"Ônibus","Próximo Ônibus");
+				onibusMarker = createBubbleMarker(o.getPosicao(),"Onibus","Próximo ônibus");
 			else
 				onibusMarker.setPosition(o.getPosicao());
 			onibusMarker.setVisible(true);
@@ -601,8 +550,6 @@ public class PesquisarActivity extends AppCompatActivity
 		mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 			@Override
 			public boolean onMarkerClick(Marker marker) {
-				mDatabase.child(uid+"-update").setValue("update");
-
 				MarcaOrbus mo = mapaMarcas.get(marker);
 				if (mo==null)
 					return true;
@@ -613,11 +560,27 @@ public class PesquisarActivity extends AppCompatActivity
 			}
 		});
 	}
+
+	public boolean onOptionsItemSelected (MenuItem item)
+	{
+		FirebaseAuth mAuth;
+		mAuth = FirebaseAuth.getInstance();
+		int id;
+		id  = item.getItemId();
+		if(id == R.id.action_settings) {
+		mAuth.signOut();
+		}
+		else if (id == R.id.aboutProjet)
+			setContentView(R.layout.activity_sobre);
+
+
+		return super.onOptionsItemSelected(item);
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu, menu);
-
 		return true;
 	}
 }
