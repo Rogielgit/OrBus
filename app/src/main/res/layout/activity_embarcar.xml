@@ -63,16 +63,7 @@
             android:background="#FF000000"
             android:orientation="horizontal"></LinearLayout>
 
-        <Button
-            android:id="@+id/bMenuSobre"
-            style="@style/menuButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:minHeight="0dip"
-            android:text="Sobre"
-            android:textColor="#FF4377a8"
-            android:textSize="14sp" />
+
 
     </LinearLayout>
 
@@ -86,10 +77,10 @@
         <TextView
             android:id="@+id/routeName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/button_selector_main"
             android:gravity="center"
-            android:minHeight="40dp"
+            android:minHeight="47dp"
             android:paddingLeft="5dp"
             android:paddingRight="10dp"
             android:text="TextView"
@@ -111,12 +102,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="10dp"
-            android:background="@drawable/button_selector_main"
             android:minHeight="36dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="10dp"
             android:text="Embarcar"
-            android:textColor="#FF000000" />
+            android:theme="@style/ThemeOverlay.MyDarkButton" />
 
         <Button
             android:id="@+id/bDesembarcar"
@@ -124,12 +112,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="10dp"
-            android:background="@drawable/button_selector_main"
             android:minHeight="36dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="10dp"
             android:text="Desembarcar"
-            android:textColor="#FF000000"
+            android:theme="@style/ThemeOverlay.MyDarkButton"
             android:visibility="gone" />
     </LinearLayout>
 

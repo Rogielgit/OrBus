@@ -57,7 +57,6 @@ public class LoginActivity extends BaseActivity implements
 		// Buttons
 		findViewById(R.id.email_sign_in_button).setOnClickListener(this);
 		findViewById(R.id.email_create_account_button).setOnClickListener(this);
-		findViewById(R.id.sign_out_button).setOnClickListener(this);
 
 
 

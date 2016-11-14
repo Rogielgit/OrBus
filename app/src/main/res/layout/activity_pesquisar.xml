@@ -60,8 +60,7 @@
             android:layout_height="wrap_content"
             android:gravity="left"
             android:minHeight="0dip"
-            android:text="Pesquisar"
-            android:theme="@style/ThemeOverlay.MyDarkButton"
+            android:text="@string/Pesquisar"
             android:enabled="false"
             android:textSize="14sp" />
 
@@ -88,18 +87,8 @@
             android:background="#FF000000"
             android:orientation="horizontal"></LinearLayout>
 
-        <Button
-            android:id="@+id/bMenuSobre"
-            style="@style/menuButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:minHeight="0dip"
-            android:text="Sobre"
-            android:textColor="#FF4377a8"
-            android:textSize="14sp" />
 
-        <Button
+        <!--somente para quem é admin -->  <Button
             android:id="@+id/bRota"
             style="@style/menuButtonStyle"
             android:layout_width="wrap_content"
@@ -125,20 +114,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/button_selector_main"
-            android:minHeight="36dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="10dp"
-            android:text="Pesquisar"
-            android:textColor="#FF000000" />
+            android:text="@string/Pesquisar"
+            android:theme="@style/ThemeOverlay.MyDarkButton"/>
 
         <Spinner
             android:id="@+id/routeSpinner"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/button_selector_main"
-            android:drawSelectorOnTop="true" />
+            android:drawSelectorOnTop="true"
+
+
+
+            />
+
 
 
     </LinearLayout>
