@@ -528,11 +528,11 @@ public class PesquisarActivity extends AppCompatActivity
 		fillPath.lineTo(height * 2f / 3f - 2f, height / 2f);
 		fillPath.close();
 
-		canvas.drawRoundRect(2f, 2f, width - 2f, height * 2f / 3f - 2f, height / 5f, height / 5f, bubbleBorder);
+/*		canvas.drawRoundRect(2f, 2f, width - 2f, height * 2f / 3f - 2f, height / 5f, height / 5f, bubbleBorder);
 		canvas.drawPath(borderPath, bubbleBorder);
 		canvas.drawPath(fillPath, bubble);
 		canvas.drawRoundRect(4f, 4f, width - 4f, height * 2f / 3f - 4f, height / 5f, height / 5f, bubble);
-
+*/
 		float areaWidth = width - 4f;
 		float areaHeight = height * 2f / 3f - 2f;
 
