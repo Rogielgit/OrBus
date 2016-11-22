@@ -97,6 +97,8 @@ public class PesquisarActivity extends AppCompatActivity
 		adminEmails = new ArrayList<String>();
 		adminEmails.add("rogiel2009@gmail.com");
 		adminEmails.add("jorgebonafe@gmail.com");
+		adminEmails.add ("cajogu14@hotmail.com");
+		adminEmails.add ("aulospl@gmail.com");
 
 		Button bEmbarcar = (Button)findViewById(R.id.bMenuEmbarcar);
 
@@ -138,6 +140,7 @@ public class PesquisarActivity extends AppCompatActivity
 						routesMap.put(name,route);
 
 						String string = "Name: "+name+"\nValue: "+value+"\n\n";
+
 					}
 				}
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -294,8 +297,10 @@ public class PesquisarActivity extends AppCompatActivity
 			selectedMarker.getMarker().setSnippet("Tempo estimado: "+ formatter.format(tempoEstimado) + " min");
 			selectedMarker.getMarker().showInfoWindow();
 
-			if (onibusMarker==null)
-				onibusMarker = createBubbleMarker(o.getPosicao(),"Ônibus","Próximo Ônibus");
+			if (onibusMarker==null) {
+				onibusMarker = createBubbleMarker(o.getPosicao());
+
+			}
 			else
 				onibusMarker.setPosition(o.getPosicao());
 			onibusMarker.setVisible(true);
@@ -431,7 +436,7 @@ public class PesquisarActivity extends AppCompatActivity
 			}
 		}
 
-		if (minDistance>50)
+		if (minDistance > 40)
 			return null;
 
 		return closestPO;
@@ -494,6 +499,7 @@ public class PesquisarActivity extends AppCompatActivity
 	}
 
 	public Marker createBubbleMarker(LatLng position, String texto, String description) {
+
 		IconGenerator iconGenerator = new IconGenerator(this);
 		iconGenerator.setStyle(IconGenerator.STYLE_WHITE);
 		Bitmap iconBitmap = iconGenerator.makeIcon("Você");
@@ -532,7 +538,25 @@ public class PesquisarActivity extends AppCompatActivity
 		canvas.drawPath(borderPath, bubbleBorder);
 		canvas.drawPath(fillPath, bubble);
 		canvas.drawRoundRect(4f, 4f, width - 4f, height * 2f / 3f - 4f, height / 5f, height / 5f, bubble);
+
+
 */
+
+		Marker marker = mMap.addMarker(new MarkerOptions()
+				.position(position).title("Você está aqui")
+				.icon(BitmapDescriptorFactory.fromResource(R.drawable.rosto))
+				.anchor((height / 5f + height / 10f + 1f) / width, 1f));
+		marker.setVisible(true);
+
+
+/*		Marker m = mMap.addMarker(new MarkerOptions()
+			.icon(BitmapDescriptorFactory.fromBitmap(bitmap)).zIndex(1000)
+			.position(position).title("Você está aqui!")
+			.anchor((height / 5f + height / 10f + 1f) / width, 1f));
+*/
+		//return m;
+		return marker;
+		/*
 		float areaWidth = width - 4f;
 		float areaHeight = height * 2f / 3f - 2f;
 
@@ -549,7 +573,84 @@ public class PesquisarActivity extends AppCompatActivity
 			.position(position).title(description)
 			.anchor((height / 5f + height / 10f + 1f) / width, 1f));
 
-		return m;
+		return m;*/
+	}
+	public Marker createBubbleMarker(LatLng position) {
+
+		IconGenerator iconGenerator = new IconGenerator(this);
+		iconGenerator.setStyle(IconGenerator.STYLE_WHITE);
+		Bitmap iconBitmap = iconGenerator.makeIcon("Você");
+
+		int width = iconBitmap.getWidth() + 10;
+		int height = iconBitmap.getHeight() + 10;
+
+		Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+
+		Paint color = new Paint();
+		color.setColor(Color.BLACK);
+
+		Paint bubble = new Paint();
+		bubble.setColor(Color.WHITE);
+		bubble.setStyle(Paint.Style.FILL);
+		Paint bubbleBorder = new Paint();
+		bubbleBorder.setColor(Color.BLACK);
+		bubbleBorder.setStyle(Paint.Style.STROKE);
+		bubbleBorder.setStrokeWidth(4);
+
+		Path borderPath = new Path();
+		borderPath.moveTo(height / 5f, height / 2f);
+		borderPath.lineTo(height / 5f + height / 10f, height - 2f);
+		borderPath.lineTo(height * 2f / 3f, height / 2f);
+		borderPath.close();
+
+		Path fillPath = new Path();
+		fillPath.moveTo(height / 5f + 1f, height / 2f);
+		fillPath.lineTo(height / 5f + height / 10f + 1f, height - 5f);
+		fillPath.lineTo(height * 2f / 3f - 2f, height / 2f);
+		fillPath.close();
+
+/*		canvas.drawRoundRect(2f, 2f, width - 2f, height * 2f / 3f - 2f, height / 5f, height / 5f, bubbleBorder);
+		canvas.drawPath(borderPath, bubbleBorder);
+		canvas.drawPath(fillPath, bubble);
+		canvas.drawRoundRect(4f, 4f, width - 4f, height * 2f / 3f - 4f, height / 5f, height / 5f, bubble);
+
+
+*/
+
+		Marker marker = mMap.addMarker(new MarkerOptions()
+				.position(position).title("Ônibus").icon(BitmapDescriptorFactory.fromResource(R.drawable.bus))
+				.anchor((height / 5f + height / 10f + 1f) / width, 1f));
+
+		marker.setVisible(true);
+
+
+/*		Marker m = mMap.addMarker(new MarkerOptions()
+			.icon(BitmapDescriptorFactory.fromBitmap(bitmap)).zIndex(1000)
+			.position(position).title("Você está aqui!")
+			.anchor((height / 5f + height / 10f + 1f) / width, 1f));
+*/
+		//return m;
+		return marker;
+		/*
+		float areaWidth = width - 4f;
+		float areaHeight = height * 2f / 3f - 2f;
+
+		float[] textWidth = new float[1];
+		float[] textHeight = new float[1];
+		setTextSizeForWidth(color, width * 2f / 3f, texto, textWidth, textHeight);
+
+		float textX = (areaWidth - textWidth[0]) / 2f;
+		float textY = areaHeight - ((areaHeight - textHeight[0]) / 2f);
+		canvas.drawText(texto, textX, textY, color);
+
+		Marker m = mMap.addMarker(new MarkerOptions()
+			.icon(BitmapDescriptorFactory.fromBitmap(bitmap)).zIndex(1000)
+			.position(position).title(description)
+			.anchor((height / 5f + height / 10f + 1f) / width, 1f));
+
+		return m;*/
 	}
 
 	private void setTextSizeForWidth(Paint paint, float desiredWidth, String text,

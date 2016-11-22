@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import static java.lang.System.currentTimeMillis;
+import static orbus.example.computeiro.orbus.R.id.icon;
 import static orbus.example.computeiro.orbus.R.id.map;
 
 public class EmbarcarActivity extends AppCompatActivity
@@ -374,23 +375,31 @@ public class EmbarcarActivity extends AppCompatActivity
 		canvas.drawPath(fillPath, bubble);
 		canvas.drawRoundRect(4f, 4f, width - 4f, height * 2f / 3f - 4f, height / 5f, height / 5f, bubble);
 */
-		float areaWidth = width - 4f;
+	/*	float areaWidth = width - 4f;
 		float areaHeight = height * 2f / 3f - 2f;
 
 		float[] textWidth = new float[1];
 		float[] textHeight = new float[1];
-		setTextSizeForWidth(color, width * 2f / 3f, "Você", textWidth, textHeight);
+		setTextSizeForWidth(color, width * 2f / 3f, "Você", textWidth, textHeight);*/
 
-		float textX = (areaWidth - textWidth[0]) / 2f;
+		/*float textX = (areaWidth - textWidth[0]) / 2f;
 		float textY = areaHeight - ((areaHeight - textHeight[0]) / 2f);
-		canvas.drawText("Você", textX, textY, color);
+		canvas.drawText("Você", textX, textY, color);*/
 
-		Marker m = mMap.addMarker(new MarkerOptions()
+		Marker marker = mMap.addMarker(new MarkerOptions()
+				.position(position).title("Você está aqui!").icon(BitmapDescriptorFactory.fromResource(R.drawable.rosto))
+				.anchor((height / 5f + height / 10f + 1f) / width, 1f));
+
+		marker.setVisible(true);
+
+
+/*		Marker m = mMap.addMarker(new MarkerOptions()
 			.icon(BitmapDescriptorFactory.fromBitmap(bitmap)).zIndex(1000)
 			.position(position).title("Você está aqui!")
 			.anchor((height / 5f + height / 10f + 1f) / width, 1f));
-
-		return m;
+*/
+		//return m;
+		return marker;
 	}
 
 	private void setTextSizeForWidth(Paint paint, float desiredWidth, String text,
@@ -441,17 +450,17 @@ public class EmbarcarActivity extends AppCompatActivity
 			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(saoCarlos, 15));
 
 		// TODO Remover, tirar comentário pra testar clicando no mapa
-//		mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-//			@Override
-//			public void onMapClick(LatLng latLng) {
-//
-//				Location location = new Location(LocationManager.GPS_PROVIDER);
-//				location.setLatitude(latLng.latitude);
-//				location.setLongitude(latLng.longitude);
-//
-//				updateLocation(location);
-//			}
-//		});
+		/*mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+			@Override
+			public void onMapClick(LatLng latLng) {
+
+				Location location = new Location(LocationManager.GPS_PROVIDER);
+				location.setLatitude(latLng.latitude);
+				location.setLongitude(latLng.longitude);
+
+				updateLocation(location);
+			}
+		});*/
 		// TODO Remover até aqui
 
 		abrir(routeData);
