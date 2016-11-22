@@ -575,6 +575,7 @@ public class PesquisarActivity extends AppCompatActivity
 
 		return m;*/
 	}
+
 	public Marker createBubbleMarker(LatLng position) {
 
 		IconGenerator iconGenerator = new IconGenerator(this);
