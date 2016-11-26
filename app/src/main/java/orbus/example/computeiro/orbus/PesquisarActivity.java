@@ -312,6 +312,9 @@ public class PesquisarActivity extends AppCompatActivity
 	public void abrir(Route route) {
 		pontos.clear();
 		marcas.clear();
+		mMap.clear();
+		if (posicaoAtual != null)
+			you = createBubbleMarker(posicaoAtual,"Você","Você está aqui!");
 
 		routeData = route.getValue();
 		routeName = route.getName();
@@ -465,6 +468,12 @@ public class PesquisarActivity extends AppCompatActivity
 				.add(ponto1, ponto2).width(6).color(Color.argb(255, 255, 165, 0))
 				.visible(true));
 		}
+
+		if (you==null) {
+			LatLng posicaoInicio = marcas.get(0).getMarker().getPosition();
+			CameraUpdate update = CameraUpdateFactory.newLatLngZoom(posicaoInicio, 15);
+			mMap.animateCamera(update);
+		}
 	}
 
 	@Override
@@ -499,7 +508,6 @@ public class PesquisarActivity extends AppCompatActivity
 	}
 
 	public Marker createBubbleMarker(LatLng position, String texto, String description) {
-
 		IconGenerator iconGenerator = new IconGenerator(this);
 		iconGenerator.setStyle(IconGenerator.STYLE_WHITE);
 		Bitmap iconBitmap = iconGenerator.makeIcon("Você");
@@ -574,6 +582,14 @@ public class PesquisarActivity extends AppCompatActivity
 			.anchor((height / 5f + height / 10f + 1f) / width, 1f));
 
 		return m;*/
+	}
+
+	@Override
+	public void onBackPressed() {
+		Intent startMain = new Intent(Intent.ACTION_MAIN);
+		startMain.addCategory(Intent.CATEGORY_HOME);
+		startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(startMain);
 	}
 
 	public Marker createBubbleMarker(LatLng position) {
