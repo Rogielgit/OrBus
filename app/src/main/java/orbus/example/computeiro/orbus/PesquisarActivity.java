@@ -302,7 +302,7 @@ public class PesquisarActivity extends AppCompatActivity
 			else{
 
 				tempohoras = ((int)tempoEstimado/60);
-				tempoMinutos =  (int)tempoEstimado -tempohoras*60;
+				tempoMinutos =  (int)tempoEstimado%60;
 				selectedMarker.getMarker().setSnippet("Tempo estimado: "+ tempohoras + "h: "+ tempoMinutos +"min");
 
 
