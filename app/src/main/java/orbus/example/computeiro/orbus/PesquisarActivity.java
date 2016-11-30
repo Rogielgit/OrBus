@@ -286,15 +286,29 @@ public class PesquisarActivity extends AppCompatActivity
 	}
 
 	private void showInfoWindow() {
+
+		int tempoMinutos;
+		int tempohoras;
 		Onibus o = getBusClosestToMark(selectedMarker);
 		if (o!=null) {
 			double distance = selectedMarker.getPonto().getDistanciaAteInicio() - o.getDistanciaAteInicio();
 
 			double tempoEstimado = distance/o.getVelocidade()/60;
 
-			NumberFormat formatter = new DecimalFormat("#0.00");
+			if (tempoEstimado <= 60) {
+				NumberFormat formatter = new DecimalFormat("#0.00");
+				selectedMarker.getMarker().setSnippet("Tempo estimado: " + formatter.format(tempoEstimado) + " min");
+			}
+			else{
 
-			selectedMarker.getMarker().setSnippet("Tempo estimado: "+ formatter.format(tempoEstimado) + " min");
+				tempohoras = ((int)tempoEstimado/60);
+				tempoMinutos =  (int)tempoEstimado -tempohoras*60;
+				selectedMarker.getMarker().setSnippet("Tempo estimado: "+ tempohoras + "h: "+ tempoMinutos +"min");
+
+
+			}
+
+
 			selectedMarker.getMarker().showInfoWindow();
 
 			if (onibusMarker==null) {
