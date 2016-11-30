@@ -450,7 +450,7 @@ public class EmbarcarActivity extends AppCompatActivity
 			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(saoCarlos, 15));
 
 		// TODO Remover, tirar comentário pra testar clicando no mapa
-		/*mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+		mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 			@Override
 			public void onMapClick(LatLng latLng) {
 
@@ -460,7 +460,7 @@ public class EmbarcarActivity extends AppCompatActivity
 
 				updateLocation(location);
 			}
-		});*/
+		});
 		// TODO Remover até aqui
 
 		abrir(routeData);
