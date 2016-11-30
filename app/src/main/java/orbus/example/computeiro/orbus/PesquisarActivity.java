@@ -86,8 +86,10 @@ public class PesquisarActivity extends AppCompatActivity
 
 	private String routeData;
 	private String routeName;
-	
 
+
+	long currentTimeBusSeen = 0;
+	long lastTimeBusSeen = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -301,12 +303,20 @@ public class PesquisarActivity extends AppCompatActivity
 				onibusMarker = createBubbleMarker(o.getPosicao());
 
 			}
-			else
+			else {
 				onibusMarker.setPosition(o.getPosicao());
+			}
+			Log.v("VISIVEL", "SIM");
+			lastTimeBusSeen = System.currentTimeMillis();
 			onibusMarker.setVisible(true);
 		}
-		else if (onibusMarker!=null)
-			onibusMarker.setVisible(false);
+		else if (onibusMarker!=null) {
+			currentTimeBusSeen = System.currentTimeMillis();
+			if (currentTimeBusSeen>lastTimeBusSeen+60000) {
+				Log.v("VISIVEL", "NAO");
+				onibusMarker.setVisible(false);
+			}
+		}
 	}
 
 	public void abrir(Route route) {
