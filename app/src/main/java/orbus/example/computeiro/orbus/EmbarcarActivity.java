@@ -16,13 +16,17 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +49,7 @@ import com.google.maps.android.ui.IconGenerator;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.zip.Inflater;
 
 import static java.lang.System.currentTimeMillis;
 import static orbus.example.computeiro.orbus.R.id.icon;
@@ -469,16 +474,16 @@ public class EmbarcarActivity extends AppCompatActivity
 	{
 		FirebaseAuth mAuth;
 		mAuth = FirebaseAuth.getInstance();
+		FirebaseUser user = mAuth.getCurrentUser();
+
 		int id;
 		id  = item.getItemId();
 		if(id == R.id.action_settings) {
 			mAuth.signOut();
-			Intent it = new Intent(EmbarcarActivity.this,LoginActivity.class);
-			startActivity(it);
-
+			updateUI(user);
 		}
-		else if (id == R.id.aboutProjet)
-			setContentView(R.layout.activity_sobre);
+
+
 
 		return super.onOptionsItemSelected(item);
 	}
@@ -488,5 +493,12 @@ public class EmbarcarActivity extends AppCompatActivity
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu, menu);
 		return true;
+	}
+	private void updateUI(FirebaseUser user) {
+
+		if (user != null) {
+			Intent it = new Intent(EmbarcarActivity.this, LoginActivity.class);
+			startActivity(it);
+		}
 	}
 }

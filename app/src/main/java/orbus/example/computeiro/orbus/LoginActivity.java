@@ -208,13 +208,8 @@ public class LoginActivity extends BaseActivity implements
 	private void updateUI(FirebaseUser user) {
 		hideProgressDialog();
 		if (user != null) {
-			// mStatusTextView.setText(getString(R.string.emailpassword_status_fmt, user.getEmail()));
-			//mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-			showProgressDialog();
-						/*findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
-            findViewById(R.id.email_password_fields).setVisibility(View.GONE);
-            findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);*/
 
+			showProgressDialog();
 			Intent it = new Intent(LoginActivity.this, PesquisarActivity.class);
 			startActivity(it);
 		}
@@ -234,10 +229,11 @@ public class LoginActivity extends BaseActivity implements
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-		if(id ==R.id.aboutProjet)
+		if(id == R.id.aboutProjet)
 		{
 			setContentView(R.layout.activity_sobre);
-			//return true;
+			Intent intent = new Intent(LoginActivity.this, Sobre.class);
+			startActivity(intent);
 		}
         return super.onOptionsItemSelected(item);
     }

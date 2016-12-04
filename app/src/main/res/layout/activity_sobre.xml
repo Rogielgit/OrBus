@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_sobre"
@@ -22,4 +23,60 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </android.support.design.widget.AppBarLayout>
-    </LinearLayout>
+
+
+    <TextView
+        android:text="Versão 1.0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:textSize="23dp"
+        android:layout_weight="0.10"
+        android:layout_marginTop="8dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FF000000"
+        android:orientation="horizontal"></LinearLayout>
+    <TextView
+        android:text="contato: orbusfaleconosco@gmail.com"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4"
+        android:layout_weight="0.91"
+        android:textSize="20dp"
+        android:layout_marginTop="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FF000000"
+        android:orientation="horizontal"></LinearLayout>
+    <TextView
+        android:text="Orbus é um aplicativo cujo principal objetivo é permitir que os usuários compartilhem a posição de um  ônibus de uma determinada linha. Ele permite ao usuário ver quão próximo um ônibus está de seu ponto atual. Da mesma forma, uma vez que o usuário embarcar ele poderá ajudar os outros usuários a saberem onde o ônibus se encontra atrabés do seu gps. "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:layout_weight="1.12"
+        android:layout_marginTop="8dp"
+        android:textSize="23dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FF000000"
+        android:orientation="horizontal"></LinearLayout>
+    <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+    <Button
+        android:text="voltar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.MyDarkButton"
+        android:id="@+id/voltar"
+        android:gravity="center"
+        />
+</LinearLayout>
+
+</LinearLayout>

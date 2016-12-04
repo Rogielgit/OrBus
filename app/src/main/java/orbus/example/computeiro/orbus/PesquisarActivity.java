@@ -15,13 +15,17 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -82,7 +86,8 @@ public class PesquisarActivity extends AppCompatActivity
 	private String uid = null;
 	private String email;
 	private ArrayList<String> adminEmails;
-
+	private int flag = 0;
+	private String rotaAtual;
 	private String routeData;
 	private String routeName;
 
@@ -90,8 +95,9 @@ public class PesquisarActivity extends AppCompatActivity
 	long currentTimeBusSeen = 0;
 	long lastTimeBusSeen = 0;
 
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pesquisar);
 
@@ -129,7 +135,10 @@ public class PesquisarActivity extends AppCompatActivity
 				routesMap.clear();
 				Spinner routeSpinner = (Spinner)findViewById(R.id.routeSpinner);
 				List<String> spinnerArray =  new ArrayList<String>();
-				spinnerArray.add("Pesquisar...");
+				if (flag ==0 )
+					spinnerArray.add("Pesquisar...");
+				else
+					spinnerArray.add(rotaAtual);
 
 				for (DataSnapshot routes : snapshot.child("routes").getChildren()) {
 					Route route = routes.getValue(Route.class);
@@ -234,10 +243,12 @@ public class PesquisarActivity extends AppCompatActivity
 			public void onItemSelected(AdapterView<?> parent, View view,
 																 int position, long id) {
 				String selected = parent.getSelectedItem().toString();
-				if (!selected.equals("Pesquisar...")) {
+				if (!selected.equals("Pesquisar...") && rotaAtual != selected ) {
 					abrir(routesMap.get(selected));
 					showToast("Rota Carregada!", Toast.LENGTH_SHORT);
 					((Button)findViewById(R.id.bMenuEmbarcar)).setEnabled(true);
+					flag = 1;
+					rotaAtual = selected;
 				}
 			}
 
@@ -305,10 +316,7 @@ public class PesquisarActivity extends AppCompatActivity
 				tempohoras = ((int)tempoEstimado/60);
 				tempoMinutos =  (int)tempoEstimado%60;
 				selectedMarker.getMarker().setSnippet("Tempo estimado: "+ tempohoras + "h: "+ tempoMinutos +"min");
-
-
 			}
-
 
 			selectedMarker.getMarker().showInfoWindow();
 
@@ -324,10 +332,12 @@ public class PesquisarActivity extends AppCompatActivity
 			onibusMarker.setVisible(true);
 		}
 		else if (onibusMarker!=null) {
+
 			currentTimeBusSeen = System.currentTimeMillis();
-			if (currentTimeBusSeen>lastTimeBusSeen+60000) {
+			if (currentTimeBusSeen > lastTimeBusSeen+6000) {
 				Log.v("VISIVEL", "NAO");
 				onibusMarker.setVisible(false);
+				selectedMarker.getMarker().setSnippet("Seu ônibus já passou ou perdemos a conexão");
 			}
 		}
 	}
@@ -565,46 +575,13 @@ public class PesquisarActivity extends AppCompatActivity
 		fillPath.lineTo(height * 2f / 3f - 2f, height / 2f);
 		fillPath.close();
 
-/*		canvas.drawRoundRect(2f, 2f, width - 2f, height * 2f / 3f - 2f, height / 5f, height / 5f, bubbleBorder);
-		canvas.drawPath(borderPath, bubbleBorder);
-		canvas.drawPath(fillPath, bubble);
-		canvas.drawRoundRect(4f, 4f, width - 4f, height * 2f / 3f - 4f, height / 5f, height / 5f, bubble);
-
-
-*/
 
 		Marker marker = mMap.addMarker(new MarkerOptions()
 				.position(position).title("Você está aqui")
 				.icon(BitmapDescriptorFactory.fromResource(R.drawable.rosto))
 				.anchor((height / 5f + height / 10f + 1f) / width, 1f));
 		marker.setVisible(true);
-
-
-/*		Marker m = mMap.addMarker(new MarkerOptions()
-			.icon(BitmapDescriptorFactory.fromBitmap(bitmap)).zIndex(1000)
-			.position(position).title("Você está aqui!")
-			.anchor((height / 5f + height / 10f + 1f) / width, 1f));
-*/
-		//return m;
-		return marker;
-		/*
-		float areaWidth = width - 4f;
-		float areaHeight = height * 2f / 3f - 2f;
-
-		float[] textWidth = new float[1];
-		float[] textHeight = new float[1];
-		setTextSizeForWidth(color, width * 2f / 3f, texto, textWidth, textHeight);
-
-		float textX = (areaWidth - textWidth[0]) / 2f;
-		float textY = areaHeight - ((areaHeight - textHeight[0]) / 2f);
-		canvas.drawText(texto, textX, textY, color);
-
-		Marker m = mMap.addMarker(new MarkerOptions()
-			.icon(BitmapDescriptorFactory.fromBitmap(bitmap)).zIndex(1000)
-			.position(position).title(description)
-			.anchor((height / 5f + height / 10f + 1f) / width, 1f));
-
-		return m;*/
+return marker;
 	}
 
 	@Override
@@ -651,46 +628,13 @@ public class PesquisarActivity extends AppCompatActivity
 		fillPath.lineTo(height * 2f / 3f - 2f, height / 2f);
 		fillPath.close();
 
-/*		canvas.drawRoundRect(2f, 2f, width - 2f, height * 2f / 3f - 2f, height / 5f, height / 5f, bubbleBorder);
-		canvas.drawPath(borderPath, bubbleBorder);
-		canvas.drawPath(fillPath, bubble);
-		canvas.drawRoundRect(4f, 4f, width - 4f, height * 2f / 3f - 4f, height / 5f, height / 5f, bubble);
-
-
-*/
-
 		Marker marker = mMap.addMarker(new MarkerOptions()
 				.position(position).title("Ônibus").icon(BitmapDescriptorFactory.fromResource(R.drawable.bus))
 				.anchor((height / 5f + height / 10f + 1f) / width, 1f));
 
 		marker.setVisible(true);
-
-
-/*		Marker m = mMap.addMarker(new MarkerOptions()
-			.icon(BitmapDescriptorFactory.fromBitmap(bitmap)).zIndex(1000)
-			.position(position).title("Você está aqui!")
-			.anchor((height / 5f + height / 10f + 1f) / width, 1f));
-*/
-		//return m;
 		return marker;
-		/*
-		float areaWidth = width - 4f;
-		float areaHeight = height * 2f / 3f - 2f;
 
-		float[] textWidth = new float[1];
-		float[] textHeight = new float[1];
-		setTextSizeForWidth(color, width * 2f / 3f, texto, textWidth, textHeight);
-
-		float textX = (areaWidth - textWidth[0]) / 2f;
-		float textY = areaHeight - ((areaHeight - textHeight[0]) / 2f);
-		canvas.drawText(texto, textX, textY, color);
-
-		Marker m = mMap.addMarker(new MarkerOptions()
-			.icon(BitmapDescriptorFactory.fromBitmap(bitmap)).zIndex(1000)
-			.position(position).title(description)
-			.anchor((height / 5f + height / 10f + 1f) / width, 1f));
-
-		return m;*/
 	}
 
 	private void setTextSizeForWidth(Paint paint, float desiredWidth, String text,
@@ -750,6 +694,7 @@ public class PesquisarActivity extends AppCompatActivity
 
 				selectedMarker = mo;
 				showInfoWindow();
+
 				return false;
 			}
 		});
@@ -762,10 +707,11 @@ public class PesquisarActivity extends AppCompatActivity
 		int id;
 		id  = item.getItemId();
 		if(id == R.id.action_settings) {
-		mAuth.signOut();
+			mAuth.signOut();
+			updateUI(null);
 		}
-		else if (id == R.id.aboutProjet)
-			setContentView(R.layout.activity_sobre);
+
+
 
 
 		return super.onOptionsItemSelected(item);
@@ -776,5 +722,13 @@ public class PesquisarActivity extends AppCompatActivity
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu, menu);
 		return true;
+	}
+
+	private void updateUI(FirebaseUser user) {
+
+		if (user != null) {
+			Intent it = new Intent(PesquisarActivity.this, LoginActivity.class);
+			startActivity(it);
+		}
 	}
 }
