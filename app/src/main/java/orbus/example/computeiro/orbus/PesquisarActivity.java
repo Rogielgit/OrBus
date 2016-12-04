@@ -704,16 +704,13 @@ return marker;
 	{
 		FirebaseAuth mAuth;
 		mAuth = FirebaseAuth.getInstance();
+		FirebaseUser user = mAuth.getCurrentUser();
 		int id;
 		id  = item.getItemId();
 		if(id == R.id.action_settings) {
 			mAuth.signOut();
-			updateUI(null);
+			updateUI(user);
 		}
-
-
-
-
 		return super.onOptionsItemSelected(item);
 	}
 

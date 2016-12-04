@@ -375,21 +375,6 @@ public class EmbarcarActivity extends AppCompatActivity
 		fillPath.lineTo(height / 5f + height / 10f + 1f, height - 5f);
 		fillPath.lineTo(height * 2f / 3f - 2f, height / 2f);
 		fillPath.close();
-/*		canvas.drawRoundRect(2f, 2f, width - 2f, height * 2f / 3f - 2f, height / 5f, height / 5f, bubbleBorder);
-		canvas.drawPath(borderPath, bubbleBorder);
-		canvas.drawPath(fillPath, bubble);
-		canvas.drawRoundRect(4f, 4f, width - 4f, height * 2f / 3f - 4f, height / 5f, height / 5f, bubble);
-*/
-	/*	float areaWidth = width - 4f;
-		float areaHeight = height * 2f / 3f - 2f;
-
-		float[] textWidth = new float[1];
-		float[] textHeight = new float[1];
-		setTextSizeForWidth(color, width * 2f / 3f, "Você", textWidth, textHeight);*/
-
-		/*float textX = (areaWidth - textWidth[0]) / 2f;
-		float textY = areaHeight - ((areaHeight - textHeight[0]) / 2f);
-		canvas.drawText("Você", textX, textY, color);*/
 
 		Marker marker = mMap.addMarker(new MarkerOptions()
 				.position(position).title("Você está aqui!").icon(BitmapDescriptorFactory.fromResource(R.drawable.rosto))
@@ -398,12 +383,6 @@ public class EmbarcarActivity extends AppCompatActivity
 		marker.setVisible(true);
 
 
-/*		Marker m = mMap.addMarker(new MarkerOptions()
-			.icon(BitmapDescriptorFactory.fromBitmap(bitmap)).zIndex(1000)
-			.position(position).title("Você está aqui!")
-			.anchor((height / 5f + height / 10f + 1f) / width, 1f));
-*/
-		//return m;
 		return marker;
 	}
 
